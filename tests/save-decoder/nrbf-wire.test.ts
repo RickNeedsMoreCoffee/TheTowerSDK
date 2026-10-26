@@ -82,12 +82,9 @@ describe('valid graphs and structural boundaries', () => {
     const complete = primitiveArray(type, bytes)
     expect(() => NRBFReader.readStream(complete.subarray(0, complete.length - 2))).toThrow(RangeError)
   })
-  it('reports incomplete primitive data through the public browser reader', () => {
+  it('directs incomplete binary save uploads to the official game export', () => {
     const bytes = cls(['count'], [0], [8], [1])
-    expect(() => decodeInflatedSave(bytes)).toThrow(/incomplete or corrupt/)
-    try { decodeInflatedSave(bytes) } catch (error) {
-      expect((error as Error & { cause: unknown }).cause).toBeInstanceOf(RangeError)
-    }
+    expect(() => decodeInflatedSave(bytes)).toThrow('External Tools Export')
   })
   it('rejects a string payload shorter than its declared length', () => {
     expect(() => NRBFReader.readStream(wire(6, ...i32(1), 4, 65))).toThrow(RangeError)
@@ -141,11 +138,10 @@ describe('valid graphs and structural boundaries', () => {
   it('rejects zero-rank binary arrays', () => {
     expect(() => NRBFReader.readStream(wire(7, ...i32(1), 0, ...i32(0), 2, 11))).toThrow(/rank/)
   })
-  it('keeps all three high-level readers accepting valid object roots', async () => {
+  it('rejects binary object roots on all high-level export readers', async () => {
     const bytes = cls(['count'], [0], [8], [...i32(7), 11])
-    const expected = { typeName: 'Save', count: 7 }
-    expect(decodeInflatedSave(bytes)).toEqual(expected)
-    expect(decodePlayerInfoSaveBytes(bytes).parsedRoot).toEqual(expected)
-    expect(await decodeSaveFile(bytes)).toEqual(expected)
+    expect(() => decodeInflatedSave(bytes)).toThrow('External Tools Export')
+    expect(() => decodePlayerInfoSaveBytes(bytes)).toThrow('External Tools Export')
+    await expect(decodeSaveFile(bytes)).rejects.toThrow('External Tools Export')
   })
 })

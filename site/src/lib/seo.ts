@@ -36,7 +36,7 @@ export const PAGE_METADATA = {
 	],
 	'/docs/save/': [
 		'Read Tower Save Files · TheTowerSDK',
-		'Decrypt Tower saves locally with your own keys, then read typed account data including labs, modules, cards and battle reports.'
+		'Read official game JSON exports for typed account data including labs, modules, cards and battle reports.'
 	],
 	'/docs/mechanics/': [
 		'Game Formulas and Calculators · TheTowerSDK',

@@ -81,7 +81,7 @@ export const heroSlides = [
 	{
 		eyebrow: 'Save Files',
 		headline: 'Read A Real Account In One Call',
-		body: 'Decode playerInfo.dat and pull research, modules, cards, ultimate weapons, vault and every stored run straight into typed objects.'
+		body: 'Decode tool_export.json and pull research, modules, cards, ultimate weapons, vault and every stored run straight into typed objects.'
 	},
 	{
 		eyebrow: 'Output',
@@ -120,7 +120,7 @@ export const features = [
 	},
 	{
 		title: 'Player Save Reading',
-		body: 'Decode playerInfo.dat and pull labs, modules, cards, ultimate weapons, and run history from a real account. adb-bridge fetches the file from a phone or emulator.',
+		body: 'Decode tool_export.json and pull labs, modules, cards, ultimate weapons, and run history from a real account. adb-bridge fetches the file from a phone or emulator.',
 		docs: '/docs/save/'
 	},
 	{
@@ -240,12 +240,8 @@ import {
   readBotsFromSaveRoot,
   readVaultFromSaveRoot,
 } from 'thetowersdk/save'
-
-const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-if (!keysPath) throw new Error('Set TOWER_SAVE_KEYS_FILE to a private key JSON file.')
-const keys = JSON.parse(await readFile(keysPath, 'utf8'))
 const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(
-  await readFile('playerInfo.dat'), { keys }
+  await readFile('tool_export.json')
 )
 
 const labs = readLabsFromSaveRoot(parsedRoot)
@@ -313,20 +309,20 @@ export const adbBridgeSnippet = `import { decodeSaveFile } from 'thetowersdk/sav
 import { readLabsFromSaveRoot } from 'thetowersdk/save'
 
 // Terminal: npx adb-bridge
-// Browser: keyFile comes from a local file input selected by the user.
-const keys = JSON.parse(await keyFile.text())
+// First tap Player ID five times in the game to create the first export.
+// Then enable Auto Export for External Tools before watching.
 const socket = new WebSocket('ws://127.0.0.1:8787')
 
 socket.onmessage = async (event) => {
   const bytes = new Uint8Array(await event.data.arrayBuffer())
 
-  const parsedRoot = await decodeSaveFile(bytes, { keys })
+  const parsedRoot = await decodeSaveFile(bytes)
   const labs = readLabsFromSaveRoot(parsedRoot)
 
   render(\`\${labs.researchedCount} researched, \${labs.maxedCount} maxed\`)
 }
 
-// Ask for the current save; the bridge re-sends whenever the game writes.
+// Ask for the current save; the bridge re-sends whenever the game updates the export.
 socket.onopen = () => socket.send(JSON.stringify({ type: 'watch', game: 'the-tower' }))`;
 
 /** Build a spreadsheet from the catalogs. */
@@ -555,7 +551,7 @@ export const agentPrompts = [
 	},
 	{
 		title: 'Save reader tool',
-		prompt: `Build a save reader: drop in playerInfo.dat and show labs researched/maxed plus equipped modules.`,
+		prompt: `Build a save reader: drop in tool_export.json and show labs researched/maxed plus equipped modules.`,
 		result: `1. ACS opens a save-reading task (researching)
 2. Wiki + package docs for playerInfo / labs / modules are pulled through MCP first
 3. Exports confirmed: decodePlayerInfoSaveBytes and lab/module extractors
@@ -663,12 +659,8 @@ const priciest = LAB_CATALOG
 export const saveSnippet = `import { readFile } from 'node:fs/promises'
 import { decodePlayerInfoSaveBytesAsync } from 'thetowersdk/node'
 import { readLabsFromSaveRoot } from 'thetowersdk/save'
-
-const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-if (!keysPath) throw new Error('Set TOWER_SAVE_KEYS_FILE to a private key JSON file.')
-const keys = JSON.parse(await readFile(keysPath, 'utf8'))
 const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(
-  await readFile('playerInfo.dat'), { keys }
+  await readFile('tool_export.json')
 )
 
 const labs = readLabsFromSaveRoot(parsedRoot)

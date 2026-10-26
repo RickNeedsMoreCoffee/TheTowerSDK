@@ -8,7 +8,7 @@
  *
  * This is the third answer. The whole package is compiled into a WASI module, so any language with
  * a WebAssembly runtime can load one file and call the same code this project ships to JavaScript.
- * No port, no server, no network: the catalogs, the calculators and the save decoder all run in
+ * No port, no server, no network: the catalogs and calculators run in
  * the caller's own process.
  *
  * ## The protocol
@@ -33,8 +33,6 @@ import * as formatting from '../dist/formatting/index.js'
 import * as mechanics from '../dist/mechanics/index.js'
 import { SHARED_CHART_REGISTRY, resolveCanonicalToolDataset } from '../dist/charts/index.js'
 import { CONTRIBUTIONS, ATTRIBUTION_LINES } from '../dist/contributions/index.js'
-import { decodeInflatedSave } from '../dist/save-decoder/index.js'
-import * as save from '../dist/save/index.js'
 
 /*
  * Number grouping, because the guest has no Intl.
@@ -104,34 +102,6 @@ if (typeof Intl === 'undefined') {
     const grouped = groupInteger(whole.replace('-', ''))
     return fraction === undefined ? `${sign}${grouped}` : `${sign}${grouped}.${fraction}`
   }
-}
-
-/**
- * Base64 to bytes, without `atob`.
- *
- * `atob` is a browser API and QuickJS has no DOM, so the decode op failed with 'atob is not
- * defined' — after the module had already been declared working, because nothing had passed it a
- * save. A build that answers every other op correctly still cannot read a file.
- */
-function fromBase64(text) {
-  const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-  const clean = String(text).replace(/[^A-Za-z0-9+/=]/g, '')
-  const padding = clean.endsWith('==') ? 2 : clean.endsWith('=') ? 1 : 0
-  const bytes = new Uint8Array((clean.length / 4) * 3 - padding)
-
-  let out = 0
-  for (let index = 0; index < clean.length; index += 4) {
-    const chunk =
-      (ALPHABET.indexOf(clean[index]) << 18)
-      | (ALPHABET.indexOf(clean[index + 1]) << 12)
-      | ((clean[index + 2] === '=' ? 0 : ALPHABET.indexOf(clean[index + 2])) << 6)
-      | (clean[index + 3] === '=' ? 0 : ALPHABET.indexOf(clean[index + 3]))
-
-    if (out < bytes.length) bytes[out++] = (chunk >> 16) & 0xff
-    if (out < bytes.length) bytes[out++] = (chunk >> 8) & 0xff
-    if (out < bytes.length) bytes[out++] = chunk & 0xff
-  }
-  return bytes
 }
 
 /** Guard every lookup that takes a name from outside: `data[key]` reaches the prototype. */
@@ -262,24 +232,6 @@ const OPS = {
     if (!dataset) return { error: `no chart dataset named ${id}` }
     const rows = Array.isArray(dataset.rows) ? dataset.rows : []
     return { id, columns: dataset.columns ?? [], ...page(rows, { offset, limit }) }
-  },
-
-  // ---- saves --------------------------------------------------------------
-
-  /*
-   * Bytes arrive base64-encoded, and already gunzipped.
-   *
-   * JSON has no byte type, and a WASI module has no zlib — the host's language has both. Decoding
-   * here would mean shipping a second gzip implementation for no gain.
-   */
-  'save.decode': ({ base64 }) => {
-    if (typeof base64 !== 'string') return { error: 'save.decode needs base64 (gunzipped) bytes' }
-    const bytes = fromBase64(base64)
-
-    const root = decodeInflatedSave(bytes)
-    const runs = save.listImportableBattleRuns(root)
-    const rows = Array.isArray(runs) ? runs : (runs?.runs ?? [])
-    return { rootKeys: Object.keys(root).length, runs: rows.length, sample: rows.slice(0, 3) }
   },
 
   // ---- attribution --------------------------------------------------------

@@ -36,7 +36,7 @@ Claude Code: `claude mcp add thetowersdk -- node ./node_modules/thetowersdk/mcp/
 | `get_export` | One export, previewed — length plus a sample, so a 300-row table doesn't flood the context. |
 | `define_term` | What a game term, acronym or set of module initials means, and whether it is ambiguous. |
 | `describe_schema` | The declared shape of a data table, rather than one inferred from a sample row. |
-| `decode_save` | Decode a `playerInfo.dat` and summarise what's in it. |
+| `decode_save` | Read an official `tool_export.json` and summarise its game data. |
 | `run_extractor` | Run one `read*FromSaveRoot` against a save, with its warnings. |
 | `calc_list` · `calc_describe` · `calc_run` | Find a calculator, read its inputs, and run it. |
 | `calc_chart` · `calc_graph` | A calculator's output as chart rows, and which calculators feed it. |
@@ -132,9 +132,6 @@ All four families are here — `damage`, `economy`, `health`, `regen` — since 
 gave the last two a complete config to start from. An unknown family is answered with the list of
 real ones rather than a failure.
 
-## Encrypted save keys
+## Official game exports
 
-Encrypted TDS1 saves decode locally with caller-supplied keys. Set `TOWER_SAVE_KEYS_FILE` in the
-MCP server environment to a private JSON file containing base64 `encryption`, `authentication`
-and `mask` values (32 bytes each). No key values belong in tool arguments or server configuration
-committed to source control. Unencrypted saves require no key file.
+Save tools accept only `tool_export.json` created by first tapping Player ID five times to create the initial export and reveal the controls, then using Settings → Toggles → External Tools Export → Manual Export. No decryption keys are accepted. Attempting to bypass save-file encryption violates The Tower Terms of Service.

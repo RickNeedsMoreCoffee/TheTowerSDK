@@ -1,13 +1,12 @@
 /**
  * Example 2 — Read a real save file.
  *
- * Two steps: decode `playerInfo.dat` into a save root, then pull typed data
+ * Two steps: decode `tool_export.json` into a save root, then pull typed data
  * out of that root. This example uses the asynchronous Node decoder; browser tools use
- * `decodeSaveFile` from `thetowersdk/save-decoder`. Both detect legacy gzip and
- * TDS1 encrypted saves; encrypted files require caller keys and are decoded locally.
+ * `decodeSaveFile` from `thetowersdk/save-decoder`. Only the official game JSON export is supported.
  *
  * Run it:
- *   npx tsx examples/02-read-a-save-file.ts /path/to/playerInfo.dat
+ *   npx tsx examples/02-read-a-save-file.ts /path/to/tool_export.json
  *
  * Where to find your save is explained in the README ("Getting a save file").
  */
@@ -21,17 +20,15 @@ import {
 } from 'thetowersdk/save'
 
 async function main(): Promise<void> {
-  const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-  const keys = keysPath ? JSON.parse(await readFile(keysPath, 'utf8')) : undefined
   const savePath = process.argv[2]
   if (!savePath) {
-    console.error('Usage: tsx examples/02-read-a-save-file.ts <path-to-playerInfo.dat>')
+    console.error('Usage: tsx examples/02-read-a-save-file.ts <path-to-tool_export.json>')
     process.exit(1)
   }
 
   // --- Step 1: decode -------------------------------------------------------
   const bytes = await readFile(savePath)
-  const { parsedRoot, wasGzip, battleRunCount } = await decodePlayerInfoSaveBytesAsync(bytes, { keys })
+  const { parsedRoot, wasGzip, battleRunCount } = await decodePlayerInfoSaveBytesAsync(bytes)
 
   console.log(`Decoded ${savePath}`)
   console.log(`  gzip-compressed: ${wasGzip}`)

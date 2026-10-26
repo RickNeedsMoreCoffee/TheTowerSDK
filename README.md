@@ -10,7 +10,7 @@ npm install thetowersdk
 
 - **Game data** — labs, workshop, modules, cards, perks, relics, guardians, bots, ultimate weapons
   and the vault, with their cost curves and effect values, as typed arrays.
-- **Save reading** — turn a player's `playerInfo.dat` into typed values: what they have researched,
+- **Save reading** — turn a player's `tool_export.json` into typed values: what they have researched,
   what they own, what is equipped, their run history.
 - **Formulas** — enemy scaling, damage, ultimate weapons, drops and workshop stats, as functions you
   call with a tier, a wave or a level.
@@ -51,20 +51,15 @@ without checking where either came from.
 import { readFile } from 'node:fs/promises'
 import { decodePlayerInfoSaveBytesAsync } from 'thetowersdk/node'
 import { readLabsFromSaveRoot } from 'thetowersdk/save'
-
-const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-if (!keysPath) throw new Error('Set TOWER_SAVE_KEYS_FILE to a private key JSON file.')
-const keys = JSON.parse(await readFile(keysPath, 'utf8'))
-const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile('playerInfo.dat'), { keys })
+const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile('tool_export.json'))
 
 const labs = readLabsFromSaveRoot(parsedRoot)
 if (!labs) throw new Error('This save has no lab research data.')
 console.log(`${labs.researchedCount} researched, ${labs.maxedCount} maxed`)
 ```
 
-Decode once, then extract whatever you need. Encrypted TDS1 saves are decrypted locally using
-caller-supplied keys. The SDK includes no game keys and makes no decryption API requests.
-Older unencrypted saves and JSON exports require no keys.
+Decode once, then extract whatever you need. Only official JSON exports are supported; private save files are rejected.
+Private save files and legacy binary files are unsupported.
 
 ---
 
@@ -74,7 +69,7 @@ Older unencrypted saves and JSON exports require no keys.
 |---|---|---|
 | `thetowersdk/data` | Game tables — costs, levels, effects, catalogs | Yes |
 | `thetowersdk/save` | `read*FromSaveRoot()` readers and save inspection | Yes |
-| `thetowersdk/node` | The save decoder | Node — [see below](#local-decryption-with-caller-keys) |
+| `thetowersdk/node` | The save decoder | Node — [see below](#getting-an-official-game-export) |
 | `thetowersdk/save-decoder` | The same decoder with no Node imports, for the browser | Yes |
 | `thetowersdk/formatting` | Number and duration formatting matching the game | Yes |
 | `thetowersdk/mechanics` | Game formulas — see [below](#formulas) | Yes |
@@ -101,7 +96,7 @@ import { formatDuration } from 'thetowersdk/formatting'
 ## How It Fits Together
 
 ```
-playerInfo.dat ──decodePlayerInfoSaveBytesAsync()──► save root (plain object)
+tool_export.json ──decodePlayerInfoSaveBytesAsync()──► save root (plain object)
                                                      │
                      ┌───────────────────────────────┼──────────────────────────────┐
                      ▼                               ▼                              ▼
@@ -116,77 +111,24 @@ can run as many as you like over the same root.
 
 ---
 
-## Getting a Save File
+## Getting an Official Game Export
 
-`playerInfo.dat` is The Tower's save file.
+The export-only reader described here is the current repository source. See the [source-build instructions](https://tmrxjd.github.io/TheTowerSDK/docs/install/) when using it before an npm release.
 
-- **Android** — `Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat`
-- **Android emulator** (BlueStacks, LDPlayer, WSA…) — the same path inside the emulated device
-- **macOS** — the native App Store build stores it in its app container under
-  `~/Library/Containers/<bundle-id>/Data/Library/Application Support/…`, with non-sandboxed installs
-  under `~/Library/Application Support/…`
-- **iOS** — inside an encrypted device backup; not practical to read directly
+First tap your **Player ID five times** in The Tower to create your first export and reveal the export controls. Then open **Settings → Toggles → External Tools Export → Manual Export**. Enable **Auto Export for External Tools** to keep the export updated. Import only `tool_export.json`.
 
-On Windows the save always comes from an emulator. On a Mac the native build is right there on disk.
+On Android and emulators the export is in `Android/data/com.TechTreeGames.TheTower/files/tool_export.json`. Copy it to a folder your browser can access, or use [adb-bridge](https://github.com/TmRxJD/adb-bridge) to pull the official export.
 
-Copying that file by hand is the tedious part of building anything save-driven, so
-[**adb-bridge**](https://github.com/TmRxJD/adb-bridge) removes the step. It talks to a connected
-phone or a running emulator over ADB, or reads the macOS container directly, and hands the bytes
-straight to whatever needs them:
+Private saves such as `playerInfo.dat`, encrypted containers and legacy binary save files are unsupported. The SDK accepts no decryption keys and provides no decryption service.
 
-```bash
-npx adb-bridge
-```
-
-- Installs Google's official platform-tools for you if `adb` isn't already on the machine (Android
-  only — the macOS path needs no tooling).
-- Serves the save to a local page over a WebSocket bound to `127.0.0.1`, so a browser app can read a
-  real account with no upload step and no file picker.
-- Can watch the save and re-send it whenever the game writes, which keeps a view live while you
-  play instead of forcing a manual re-import.
-- Pulls only. It never modifies anything on the device, needs no root, and touches only the games you
-  enable.
-- One install covers multiple games — adding another registers it with the bridge you already have.
-
-Feed the bytes it gives you to `await decodePlayerInfoSaveBytesAsync` and everything above applies unchanged.
-
-> Save files are personal data. If your tool uploads them anywhere, tell your users plainly.
-
-### Local Decryption With Caller Keys
-
-This interface targets repository source. Use a [source build](https://tmrxjd.github.io/TheTowerSDK/docs/install/)
-for caller-key decoding; published npm interfaces may differ.
-
-Encrypted TDS1 v1 saves require three 32-byte values: `encryption`, `authentication` and `mask`.
-Each accepts a `Uint8Array` or canonical base64 string. Keep them outside published source and
-client bundles. Browser applications can accept a user-selected key JSON file; Node applications
-can read a private file from `TOWER_SAVE_KEYS_FILE`.
+**Attempting to bypass save-file encryption violates The Tower Terms of Service.**
 
 ```ts
 import { decodeSaveFile } from 'thetowersdk/save-decoder'
-
-async function readSave(saveFile, keyFile) {
-  const keys = JSON.parse(await keyFile.text())
-  return decodeSaveFile(await saveFile.arrayBuffer(), { keys })
-}
+const root = await decodeSaveFile(await exportFile.arrayBuffer())
 ```
 
-Decryption, gzip decompression and NRBF parsing run locally. Browser decryption requires Web Crypto
-on HTTPS or localhost; Node callers use `await decodePlayerInfoSaveBytesAsync(bytes, { keys })`
-on Node 20+. Missing keys cause an explicit error; there is no remote fallback or bundled key.
-
-`decryptSave(bytes, { keys })` returns decrypted compressed bytes without parsing.
-`gunzipBytes(bytes, { keys })` returns inflated bytes. WASM callers decrypt and decompress before
-passing NRBF bytes to `save.decode`.
-
-### Older Saves And JSON Exports
-
-For unencrypted gzip, raw NRBF and JSON exports, call `decodeSaveFile(bytes)` or
-`decodePlayerInfoSaveBytesAsync(bytes)` without options. The synchronous Node reader
-`decodePlayerInfoSaveBytes(bytes)` accepts these unencrypted formats.
-
-The [Save Files guide](https://tmrxjd.github.io/TheTowerSDK/docs/save/) covers key formats, browser
-and Node examples, byte-level decryption and account readers.
+Export files contain personal account data. Tell users plainly if your tool uploads them anywhere.
 
 ## Reading a Save
 
@@ -757,8 +699,8 @@ Runnable, in [`examples/`](examples):
 
 ```bash
 npx tsx examples/01-browse-game-data.ts                        # the tables, no save needed
-npx tsx examples/02-read-a-save-file.ts ~/playerInfo.dat       # what one player has
-npx tsx examples/03-plan-upgrades-from-a-save.ts ~/playerInfo.dat  # a tool: what to buy next
+npx tsx examples/02-read-a-save-file.ts ~/tool_export.json       # what one player has
+npx tsx examples/03-plan-upgrades-from-a-save.ts ~/tool_export.json  # a tool: what to buy next
 npx tsx examples/04-generate-a-chart.ts                        # catalogs -> plot-ready series
 npx tsx examples/05-generate-a-cost-table.ts "Golden Tower"    # the same data as a cost table
 npx tsx examples/06-read-the-community-wiki.ts "Golden Tower"  # wiki page -> Markdown
@@ -1005,7 +947,7 @@ Or by config file:
 |---|---|
 | `list_exports` · `get_export` | What exists, and one table previewed rather than dumped |
 | `describe_schema` | A table's declared shape, not one guessed from a sample row |
-| `decode_save` · `run_extractor` | What is in a `playerInfo.dat`, and one reader's output |
+| `decode_save` · `run_extractor` | What is in a `tool_export.json`, and one reader's output |
 | `define_term` | What an acronym means, and whether it is ambiguous |
 | `calc_list` · `calc_describe` · `calc_run` · `calc_chart` · `calc_graph` | Every calculator: find it, read its inputs, run it, chart it, see what feeds it |
 | `plan_effective_path` | An Effective Path, with the candidates it left out and why |

@@ -76,7 +76,7 @@ The package itself — everything that ships, and nothing that does not.
 | [`src/node`](node/MAP.md) | 3 | Decoding playerInfo.dat in Node. |
 | [`src/node/nrbf`](node/nrbf/MAP.md) | 4 | The .NET Binary Format reader, ported to TypeScript. |
 | [`src/save`](save/MAP.md) | 1 | Extractors over a decoded save. |
-| [`src/save-decoder`](save-decoder/MAP.md) | 3 | The same save reader with no Node imports, for the browser. |
+| [`src/save-decoder`](save-decoder/MAP.md) | 2 | The same save reader with no Node imports, for the browser. |
 | [`src/save/access`](save/access/MAP.md) | 4 | How you get at a save — typed reads and where the file lives. |
 | [`src/save/battle`](save/battle/MAP.md) | 7 | Battle reports and history as the save stores them. |
 | [`src/save/bots`](save/bots/MAP.md) | 3 | What a save says about bots. |

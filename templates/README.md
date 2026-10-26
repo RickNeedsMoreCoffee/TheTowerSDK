@@ -20,7 +20,7 @@ returns is a plain object that extractors read and never mutate, so run as many 
 one root.
 
 **Only `thetowersdk/node` needs Node.** `data`, `save`, `formatting`, `mechanics`, `wiki`,
-`charts`, `knowledge` and `inputs` are all browser-safe. A widget that never opens a save file
+`charts`, `knowledge` and `inputs` are all browser-safe. A widget that never opens an official game export
 never imports the decoder — that is why `browser-widget.ts` exists as a separate file.
 
 **Say what you could not do.** Extractors return `null` for features a save predates and carry a

@@ -1,6 +1,3 @@
-import { existsSync, readFileSync } from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import {
   LIFETIME_SAVE_ORB_KILLS_FIELD_BEFORE_V29,
@@ -20,17 +17,12 @@ import { decodePlayerInfoSaveBytes } from '../../src/node/decode-save'
  * is indistinguishable here from a player who has never used an orb.
  */
 
-const HERE = path.dirname(fileURLToPath(import.meta.url))
-const REAL_SAVE = path.resolve(HERE, '..', '..', '..', '..', 'test', 'playerInfo.dat')
-// Monorepo-root fixture, absent when the published surface is cloned and verified.
-const HAS_SAVE = existsSync(REAL_SAVE)
-
 /** The other rows are irrelevant here; only orbKills is under test. */
 function orbKillsFrom(root: Record<string, unknown>): string | undefined {
   return readLifetimeFromSaveRoot(root)?.values.orbKills
 }
 
-describe.skipIf(!HAS_SAVE)('lifetime orb kills across the v29 field rename', () => {
+describe('lifetime orb kills across the v29 field rename', () => {
   it('reads either spelling, and reads them the same way', () => {
     /*
      * Compared against each other rather than against a literal: the value is passed through the
@@ -66,8 +58,8 @@ describe.skipIf(!HAS_SAVE)('lifetime orb kills across the v29 field rename', () 
     expect(LIFETIME_SAVE_ORB_KILLS_KEY).not.toBe(LIFETIME_SAVE_ORB_KILLS_FIELD_BEFORE_V29)
   })
 
-  it('finds orb kills in the repository\'s real save fixture', () => {
-    const decoded = decodePlayerInfoSaveBytes(readFileSync(REAL_SAVE))
+  it('reads orb kills through the official JSON export boundary', () => {
+    const decoded = decodePlayerInfoSaveBytes(Buffer.from(JSON.stringify({ ResearchLevel: [1], [LIFETIME_SAVE_ORB_KILLS_KEY]: 4321 })))
     const root = decoded.parsedRoot as Record<string, unknown>
 
     const usesV29Key = Object.keys(root).includes(LIFETIME_SAVE_ORB_KILLS_KEY)

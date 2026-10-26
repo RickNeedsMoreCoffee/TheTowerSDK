@@ -26,7 +26,7 @@
 
 <div class="space-y-3 text-sm">
 	<p class="text-muted">
-		Decode <code>playerInfo.dat</code>, then pull labs, modules, cards, ultimate weapons, bots,
+		Decode <code>tool_export.json</code>, then pull labs, modules, cards, ultimate weapons, bots,
 		vault, relics, lifetime stats, and battle reports from the same root. This fictional account
 		summary shows what you can build from those rows; it is not the readers' return shape:
 	</p>

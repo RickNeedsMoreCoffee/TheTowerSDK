@@ -25961,7 +25961,6 @@ export const GENERATED_CALCULATORS: readonly CalculatorSpec[] = [
     because: 'Exported from node and reachable by agents. Declared for coverage: the signature is derived from the source, the reason it matters is not yet written.',
     params: [
       { name: 'input', kind: 'object', describes: 'Uint8Array | Buffer | ArrayBuffer' },
-      { name: 'options', kind: 'object', optional: true, describes: 'SaveDecodeOptions' },
     ],
     returns: { kind: 'object', describes: 'Promise<PlayerInfoSaveDecodeResult>' },
     invariants: ['not yet checked — this entry is generated, not curated'],
@@ -27353,6 +27352,6 @@ export const GENERATED_IMPLEMENTATIONS: Record<string, (args: Record<string, unk
   'wiki.convertFandomWikitextToMarkdown': a => convertFandomWikitextToMarkdown(a.wikitext as never, a.context as never),
   'wiki.scoreFandomMarkdownQuality': a => scoreFandomMarkdownQuality(a.content as never),
   'node.decodePlayerInfoSaveBytes': a => decodePlayerInfoSaveBytes(a.input as never),
-  'node.decodePlayerInfoSaveBytesAsync': a => decodePlayerInfoSaveBytesAsync(a.input as never, a.options as never),
+  'node.decodePlayerInfoSaveBytesAsync': a => decodePlayerInfoSaveBytesAsync(a.input as never),
   'node.nrbfToJSON': a => nrbfToJSON(a.obj as never),
 }

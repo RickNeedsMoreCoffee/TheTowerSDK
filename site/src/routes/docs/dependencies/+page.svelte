@@ -10,8 +10,7 @@
 <h1 class="text-3xl font-semibold">Dependencies</h1>
 <p class="mt-3 text-muted">
 	One runtime dependency, and nothing else reaches your install. The game data, the formulas and the
-	save reader are in the package. Encrypted saves require caller-supplied keys; decryption and
-	parsing run locally without a hosted service.
+	save reader are in the package. Only official JSON exports are supported; parsing run locally without a hosted service.
 </p>
 
 <h2 class="mt-10 text-xl font-semibold">The One Runtime Dependency</h2>
@@ -59,15 +58,8 @@
 	them is installed by consumers, and none appears in the published tarball.
 </p>
 
-<h2 class="mt-10 text-xl font-semibold">What Has No Dependencies At All</h2>
-<p class="mt-3 text-muted">
-	The save reader is the part most likely to be embedded somewhere awkward, so it is worth being
-	precise about. Its NRBF parser reads the typed record stream inside <code>playerInfo.dat</code>
-	without third-party dependencies. Game 29.1.0 wraps that gzip-compressed stream in an encrypted
-	<code>TDS1</code> container. The SDK authenticates and decrypts encrypted files locally with caller-supplied keys and Web Crypto.
-	Browsers use <code>DecompressionStream</code> for gzip; Node uses <code>node:zlib</code>.
-	The key boundary is validated with Zod. Older unencrypted saves require no keys.
-</p>
+<h2 class="mt-10 text-xl font-semibold">Game Export Validation</h2>
+<p class="mt-3 text-muted">The official JSON export is parsed locally and validated with Zod. Private binary save files and decryption keys are unsupported.</p>
 
 <h2 class="mt-10 text-xl font-semibold">Checking For Yourself</h2>
 <p class="mt-3 text-muted">The manifest is the authority, not this page.</p>

@@ -1,8 +1,7 @@
 import { existsSync } from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { MONOREPO_ROOT, PACKAGE_ROOT } from '../helpers/paths'
+import { PACKAGE_ROOT } from '../helpers/paths'
 
 import { CALCULATOR_BUILDERS, findCalculatorBuilder } from '../../src/builders'
 import { LAB_CATALOG } from '../../src/data'
@@ -80,33 +79,11 @@ describe.skipIf(!built)('the WASM module answers as the library does', () => {
     expect(answer.items).toEqual(LAB_CATALOG.slice(0, 3))
   })
 
-  it('decodes a real save to the same account the library reads', async () => {
-    /*
-     * The save fixture is one person's account and is not in the published repo, so this skips
-     * where it is absent rather than failing. Where it is present it is the only test that proves
-     * the decode path end to end — and it is the path that broke: `atob` is a browser API, QuickJS
-     * has no DOM, and the module answered every other op correctly while being unable to read a
-     * file at all.
-     */
-    const fixture = path.resolve(MONOREPO_ROOT, 'android/app/src/main/assets/public/playerInfo.dat')
-    if (!existsSync(fixture)) return
-
-    const { gunzipSync } = await import('node:zlib')
-    const { readFileSync } = await import('node:fs')
-    const inflated = gunzipSync(readFileSync(fixture))
-
+  it('does not expose the retired private-save decoding operation', async () => {
     const call = await loadCaller()
-    const answer = await call({ op: 'save.decode', base64: inflated.toString('base64') })
-
-    const { decodeInflatedSave } = await import('../../src/save-decoder')
-    const { listImportableBattleRuns } = await import('../../src/save')
-    const root = decodeInflatedSave(new Uint8Array(inflated))
-    const runs = listImportableBattleRuns(root)
-    const expected = Array.isArray(runs) ? runs.length : 0
-
-    expect(answer.ok).toBe(true)
-    expect(answer.rootKeys).toBe(Object.keys(root).length)
-    expect(answer.runs).toBe(expected)
+    const answer = await call({ op: 'save.decode', base64: 'VEREMQ==' })
+    expect(answer.ok).toBe(false)
+    expect(answer.error).toEqual(expect.any(String))
   })
 
   it('answers an unknown op with a value, not a trap', async () => {

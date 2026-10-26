@@ -46,7 +46,7 @@
 				{
 					href: '/docs/save/',
 					label: 'Save Files',
-					body: "Decode playerInfo.dat and read a player's runs, research, cards, modules, bots and vault."
+					body: "Decode tool_export.json and read a player's runs, research, cards, modules, bots and vault."
 				},
 				{
 					href: '/docs/charts/',

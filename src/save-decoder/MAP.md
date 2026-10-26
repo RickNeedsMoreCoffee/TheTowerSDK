@@ -6,8 +6,7 @@ The same save reader with no Node imports, for the browser.
 
 | File | Purpose | Exports |
 |---|---|---|
-| `encrypted.ts` | Local TDS1 authentication and decryption using caller-supplied keys. | isEncryptedSave, decryptSave |
-| `index.ts` | This domain is flat: | isGzipped, gunzipBytes, decodeSaveFile, decodeInflatedSave (+9 more) |
-| `types.ts` | — | SaveDecryptionKeys, SaveDecodeOptions |
+| `encrypted.ts` | — | GAME_EXPORT_REQUIRED_MESSAGE, isEncryptedSave |
+| `index.ts` | This domain is flat: | isGzipped, decodeSaveFile, decodeInflatedSave, isEncryptedSave (+1 more) |
 
 [← src](../MAP.md) · [← the package](../../MAP.md)

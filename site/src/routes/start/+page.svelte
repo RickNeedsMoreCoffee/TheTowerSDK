@@ -10,14 +10,13 @@
 <h1 class="mt-2 text-3xl font-semibold">Get Started</h1>
 <p class="mt-2 max-w-2xl text-muted">
 	Install the package, point your assistant at the MCP server, and start from a working example.
-	Catalogs and formulas work without keys or an account. Encrypted save decoding runs locally
-	with caller-supplied game keys; optional integrations may use network access.
+	Catalogs and formulas work without keys or an account. Official game exports are parsed locally; optional integrations may use network access.
 </p>
 
 <div class="mt-8 max-w-3xl space-y-10">
 	<section>
 		<h2 class="text-xl font-medium">1. Install TheTowerSDK</h2>
-		<p class="mt-2 text-sm text-muted">For the caller-key save decoder, use the <a href={href('/docs/install/')}>source-build instructions</a>.</p>
+		<p class="mt-2 text-sm text-muted">For the current export-only reader, follow the <a href={href('/docs/install/')}>source-build instructions</a>.</p>
 		<p class="mt-2 text-sm text-muted">
 			Add the package to your app or tool repo. Pin a version when you want frozen game numbers.
 		</p>
@@ -94,10 +93,10 @@
 	</section>
 
 	<section>
-		<h2 class="text-xl font-medium">4. Saves From a Device (optional)</h2>
+		<h2 class="text-xl font-medium">4. Official Exports From a Device (optional)</h2>
 		<p class="mt-2 text-sm text-muted">
-			Android path:
-			<code>Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat</code>.
+			First tap your Player ID five times in the game to create your first export and reveal the export controls. For subsequent exports, use Settings → Toggles → External Tools Export → Manual Export or enable Auto Export for External Tools. Android path:
+			<code>Android/data/com.TechTreeGames.TheTower/files/tool_export.json</code>.
 			<a href={LINKS.adbBridge}>adb-bridge</a>
 			can copy it from a device or emulator. Decode with
 			<code>thetowersdk/node</code>, then extractors in
@@ -108,8 +107,7 @@
 	<section>
 		<h2 class="text-xl font-medium">5. What You Can Add Alongside It</h2>
 		<p class="mt-2 text-sm text-muted">
-			None of these are dependencies. Catalogs and formulas work offline without keys; encrypted saves
-			require caller-supplied keys. Each of
+			None of these are dependencies. Catalogs and formulas work offline without keys; account imports use the official game JSON export. Each of
 			these adds one capability it deliberately does not carry itself.
 		</p>
 

@@ -14,8 +14,7 @@
 <p class="mt-3 text-muted">
 	No port of the numbers, and no service to host. Every catalog, all {spelled(sdkFacts.builders)} builders,
 	{sdkFacts.formulas}
-	formulas, number formatting and NRBF parsing run inside your own process. Encrypted save
-	decryption uses caller-supplied keys in the Node/browser SDK before local parsing.
+	formulas and number formatting run inside your own process. Use official game JSON exports for account data.
 </p>
 
 <h2 class="mt-10 text-xl font-semibold">Get The Module</h2>
@@ -151,7 +150,6 @@ print(call(op="calc.run", id="thorns.damage",
 {"op": "charts.list"}
 {"op": "charts.rows", "id": "…"}
 
-{"op": "save.decode", "base64": "…"}       # gunzipped playerInfo.dat bytes
 {"op": "contributions"}`}
 	/>
 </div>
@@ -162,34 +160,8 @@ print(call(op="calc.run", id="thorns.damage",
 	to a different one.
 </p>
 
-<h2 class="mt-10 text-xl font-semibold">Saves</h2>
-<p class="mt-3 text-muted">
-	JSON has no byte type and the module has no zlib, so <code>save.decode</code> takes base64 of the
-	<strong>already gunzipped</strong> file. Your language has gzip; shipping a second implementation inside
-	the module would buy nothing.
-</p>
-<p class="mt-3 text-muted">
-	Game 29.1.0 encrypted <code>TDS1</code> saves also need authentication, decryption and unmasking
-	before gzip decompression. The WASM operation accepts NRBF bytes only. Use the Node/browser SDK
-	with caller-supplied keys to unwrap encrypted files first;
-	<code>gunzipBytes</code> returns the inflated
-	NRBF payload. See <a href={href('/docs/save/')}>Save Files</a> for that path.
-</p>
-<div class="mt-4">
-	<CodeBlock
-		code={`import base64, gzip
-
-with open("playerInfo.dat", "rb") as handle:
-    raw = handle.read()
-
-if raw[:4] == b"TDS1":
-    raise ValueError("Unwrap this encrypted save with the Node/browser SDK first")
-
-inflated = gzip.decompress(raw) if raw[:2] == b"\\x1f\\x8b" else raw
-print(call(op="save.decode", base64=base64.b64encode(inflated).decode()))
-# {'ok': True, 'rootKeys': 611, 'runs': 30, 'sample': [...]}`}
-	/>
-</div>
+<h2 class="mt-10 text-xl font-semibold">Game Exports</h2>
+<p class="mt-3 text-muted">Use the Node or browser SDK to read the official <code>tool_export.json</code> file. First tap your Player ID five times to create your first export and reveal the export controls. Then use Settings → Toggles → External Tools Export → Manual Export for subsequent exports. Private save files and decryption are unsupported. Attempting to bypass save-file encryption violates The Tower Terms of Service. See <a href={href('/docs/save/')}>Game Exports</a>.</p>
 
 <h2 class="mt-10 text-xl font-semibold">Does It Agree With The Library?</h2>
 <p class="mt-3 text-muted">
@@ -197,14 +169,7 @@ print(call(op="save.decode", base64=base64.b64encode(inflated).decode()))
 	this exists to prevent — the reason to ship a module at all is that re-implementing the numbers in
 	another language guarantees two versions that drift.
 </p>
-<p class="mt-3 text-muted">
-	The suite compares both builds on the same inputs, and it has caught three real differences. The
-	JavaScript engine inside the module has no ICU, so
-	<code>formatGroupedNumber(4770477147914)</code> returned the digits ungrouped where Node grouped
-	them — both look like numbers. Then very large values printed in exponential notation. And
-	<code>atob</code> is a browser API, so the save decoder was the one operation that could not run at
-	all, while every other answer was correct.
-</p>
+<p class="mt-3 text-muted">The suite compares catalog rows, calculator results and number formatting across both builds. Account-file imports use the browser or Node official-export reader.</p>
 
 <p class="mt-8 text-sm">
 	<a href={href('/docs/builders/')}>Calculators →</a>

@@ -92,7 +92,7 @@
 			title: 'TheTowerSDK',
 			role: 'Required',
 			action: 'Add to your project',
-			body: 'Game catalogs, save reading, formulas, charts, and wiki ingestion for Node and browsers. Catalogs and formulas run locally; encrypted saves require your own keys. Wiki integrations use network access.',
+			body: 'Game catalogs, save reading, formulas, charts, and wiki ingestion for Node and browsers. Catalogs and formulas run locally; account imports accept only official game JSON exports. Wiki integrations use network access.',
 			command: 'npm install thetowersdk',
 			docsHref: href('/docs/install/'),
 			docsLabel: 'Install Docs'
@@ -327,7 +327,7 @@
 <section class="section-rule section-art mt-16" style={sectionArt(3)}>
 	<h2 class="text-2xl font-semibold">Reading Save Files</h2>
 	<p class="mt-2 max-w-2xl text-muted">
-		<code>playerInfo.dat</code> holds a player's whole account: research, modules, cards, ultimate weapons,
+		<code>tool_export.json</code> holds a player's whole account: research, modules, cards, ultimate weapons,
 		vault, and every run the game kept. Decode it once, then run as many extractors over the result as
 		you like — each returns typed values you can drop straight into a tracker. The decoded object stays
 		available too, so any field is reachable.

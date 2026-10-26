@@ -10,8 +10,8 @@ npx tsx examples/01-browse-game-data.ts
 | # | File | Needs | What it shows |
 |---|---|---|---|
 | 1 | [`01-browse-game-data.ts`](01-browse-game-data.ts) | nothing | The catalogs as typed arrays: cost to max, grouping by category |
-| 2 | [`02-read-a-save-file.ts`](02-read-a-save-file.ts) | a save file | Decode `playerInfo.dat` once, then run extractors over the root |
-| 3 | [`03-plan-upgrades-from-a-save.ts`](03-plan-upgrades-from-a-save.ts) | a save file | The three layers together — decode → read → rank what to buy next |
+| 2 | [`02-read-a-save-file.ts`](02-read-a-save-file.ts) | an official game export | Decode `tool_export.json` once, then run extractors over the root |
+| 3 | [`03-plan-upgrades-from-a-save.ts`](03-plan-upgrades-from-a-save.ts) | an official game export | The three layers together — decode → read → rank what to buy next |
 | 4 | [`04-generate-a-chart.ts`](04-generate-a-chart.ts) | nothing | Turn a level progression into a plot-ready series |
 | 5 | [`05-generate-a-cost-table.ts`](05-generate-a-cost-table.ts) | nothing | Build a cost table for an ultimate weapon |
 | 6 | [`06-read-the-community-wiki.ts`](06-read-the-community-wiki.ts) | network | Search the wikis, fetch a page as Markdown, credit its authors |
@@ -22,9 +22,9 @@ npx tsx examples/01-browse-game-data.ts
 | 11 | [`11-build-a-knowledge-base.ts`](11-build-a-knowledge-base.ts) | nothing | Knowledge chunks derived from the catalogs, so the prose cannot go stale |
 | 12 | [`12-show-module-and-card-art.ts`](12-show-module-and-card-art.ts) | nothing | Pointing at artwork you supply yourself, and the naming rule that finds it |
 
-## Getting a save file
+## Getting an official game export
 
-`playerInfo.dat` comes from the player's own device. The examples that need one take its path as
+First tap your Player ID five times to create `tool_export.json` and reveal the export controls. For subsequent exports, use Settings → Toggles → External Tools Export → Manual Export. It comes from the player's own device. The examples that need one take its path as
 an argument; nothing here downloads or uploads a save.
 
 ## Templates
@@ -44,7 +44,7 @@ them:
 
 ```bash
 npm run examples:run
-npm run examples:run -- --save ~/playerInfo.dat   # include the two that need a save
+npm run examples:run -- --save ~/tool_export.json   # include the two that need a save
 ```
 
 That is how `05-generate-a-cost-table.ts` was found reading only the first word of a weapon

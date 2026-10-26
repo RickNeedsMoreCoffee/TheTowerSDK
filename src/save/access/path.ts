@@ -12,7 +12,7 @@ export const TOWER_ANDROID_PACKAGE = 'com.TechTreeGames.TheTower'
 export const TOWER_PLAYER_INFO_FILENAME = 'playerInfo.dat'
 /** Official export written under Application.persistentDataPath. */
 export const TOWER_TOOL_EXPORT_FILENAME = 'tool_export.json'
-export const TOWER_SAVE_FILENAMES = [TOWER_TOOL_EXPORT_FILENAME, TOWER_PLAYER_INFO_FILENAME] as const
+export const TOWER_SAVE_FILENAMES = [TOWER_TOOL_EXPORT_FILENAME] as const
 export const TOWER_ANDROID_TOOL_EXPORT_RELATIVE = `files/${TOWER_TOOL_EXPORT_FILENAME}`
 
 /** Android's external persistentDataPath aliases, independent of transport. */

@@ -8,8 +8,8 @@
 <h1 class="text-3xl font-semibold">Install</h1>
 <p class="mt-3 text-muted">
 	The SDK runs in Node 20 or newer and in browsers. Catalogs and formulas need no setup;
-	encrypted save decoding requires caller-supplied game keys. Optional wiki and Sheets integrations
-	use network access. This site documents repository source; published npm interfaces may differ.
+	account imports accept only official game JSON exports. Optional wiki and Sheets integrations
+	use network access. These docs describe the export-only repository source; published npm releases may have a different interface.
 </p>
 
 <div class="mt-6">
@@ -18,7 +18,7 @@
 
 <h2 class="mt-10 text-xl font-semibold">Build From Source</h2>
 <p class="mt-3 text-muted">
-	Use a repository build for the caller-key save decoder documented on this site. Build the SDK,
+	Build from source to use the export-only reader described here. Build the SDK,
 	pack it, and install the generated tarball in your application. Record the source commit for reproducibility.
 </p>
 <div class="mt-4">
@@ -38,7 +38,7 @@ npm install /path/to/TheTowerSDK/thetowersdk-${SDK_VERSION}.tgz`} />
 	upgrade deliberately after a patch.
 </p>
 <div class="mt-4">
-	<CodeBlock code={`npm install thetowersdk@${SDK_VERSION} --save-exact`} />
+	<CodeBlock code="npm install thetowersdk" />
 </div>
 
 <h2 class="mt-10 text-xl font-semibold">What A Version Means</h2>
@@ -117,7 +117,7 @@ console.log(formatNumberForDisplay(total), 'coins to max')`}
 			<tr>
 				<td><code>thetowersdk/node</code></td>
 				<td class="text-muted">
-					Decoding <code>playerInfo.dat</code> bytes. Node only.
+					Decoding <code>tool_export.json</code> bytes. Node only.
 					<a href={href('/docs/save/')}>Docs</a>
 				</td>
 			</tr>

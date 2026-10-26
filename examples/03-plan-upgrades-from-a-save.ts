@@ -8,7 +8,7 @@
  *   mechanics → rank what to buy next (Effective Paths)
  *
  * Run it:
- *   npx tsx examples/03-plan-upgrades-from-a-save.ts <path-to-playerInfo.dat>
+ *   npx tsx examples/03-plan-upgrades-from-a-save.ts <path-to-tool_export.json>
  */
 import { readFile } from 'node:fs/promises'
 import { decodePlayerInfoSaveBytesAsync } from 'thetowersdk/node'
@@ -16,15 +16,13 @@ import { buildEffectiveEconomyInputsFromSave, computeCoinsPerHourFromSaveRoot } 
 import { EFFECTIVE_ECONOMY_UPGRADES, planEffectiveEconomyPath } from 'thetowersdk/mechanics'
 
 async function main(): Promise<void> {
-  const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-  const keys = keysPath ? JSON.parse(await readFile(keysPath, 'utf8')) : undefined
   const savePath = process.argv[2]
   if (!savePath) {
-    console.error('Usage: tsx examples/03-plan-upgrades-from-a-save.ts <path-to-playerInfo.dat>')
+    console.error('Usage: tsx examples/03-plan-upgrades-from-a-save.ts <path-to-tool_export.json>')
     process.exit(1)
   }
 
-  const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile(savePath), { keys })
+  const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile(savePath))
 
   /*
    * Step 1 — turn the save into planner inputs.

@@ -10,7 +10,6 @@ The MCP server, so an agent can query the package instead of guessing at it.
 | `oracle-tools.mjs` | tower-oracle — the game-knowledge MCP surface. | TOWER_ORACLE_TOOLS, TOWER_ORACLE_INSTRUCTIONS |
 | `run-repo-tsx.mjs` | Spawn a repo `.mjs` script via local `tsx` without going through `pnpm.cmd` (Windows Node spawnSync EINVAL on .cmd without shell). | resolveTsxCli, runRepoTsx, parseCliJson |
 | `run-stdio.mjs` | Shared MCP JSON-RPC stdio loop (shipped with thetowersdk; reused by monorepo tower-mcp). | runStdioMcp, isDirectRun |
-| `save-options.mjs` | Read caller-supplied decryption keys from the local MCP environment, never tool arguments. | readSaveDecodeOptions |
 | `scratchpad.mjs` | — | createScratchpad |
 | `server.mjs` | MCP server for thetowersdk. | COMPLIANCE_INSTRUCTIONS, TOOLS, availableTools, TOWER_ORACLE_INSTRUCTIONS (+1 more) |
 

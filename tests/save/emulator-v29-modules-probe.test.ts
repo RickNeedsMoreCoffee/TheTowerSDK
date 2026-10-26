@@ -1,18 +1,20 @@
-import { existsSync, readFileSync } from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { decodePlayerInfoSaveBytes } from '../../src/node/decode-save'
 import { readModulesFromSaveRoot } from '../../src/save/modules/read'
 
-const HERE = path.dirname(fileURLToPath(import.meta.url))
-const REAL_SAVE = path.resolve(HERE, '..', '..', '..', '..', 'test', 'playerInfo.dat')
-// Monorepo-root fixture, absent when the published surface is cloned and verified.
-const HAS_SAVE = existsSync(REAL_SAVE)
+// Public export properties with independent primary and assist level values.
+const exportBytes = Buffer.from(JSON.stringify({
+  ResearchLevel: [1], VersionNumber: 2910, HasMigratedModuleLevelsToSlots: true,
+  SlotLevels: [101, 113, 127, 139],
+  ModuleEquipped: [9, 17, 47, 40].map(InfoIndex => ({ InfoIndex, CurrentRarity: 15, Level: 0 })),
+  AssistModuleSlots: [9, 17, 47, 40].map((InfoIndex, Type) => ({
+    Type, Level: [43, 47, 53, 59][Type], EquippedModule: { InfoIndex, CurrentRarity: 15, Level: 0 },
+  })),
+}))
 
-describe.skipIf(!HAS_SAVE)('v29 emulator save — module slot levels', () => {
+describe('official JSON export — migrated module slot levels', () => {
   it('reads primary levels from slotLevels after migration', () => {
-    const root = decodePlayerInfoSaveBytes(readFileSync(REAL_SAVE)).parsedRoot as Record<string, unknown>
+    const root = decodePlayerInfoSaveBytes(exportBytes).parsedRoot as Record<string, unknown>
     expect(root.versionNumber).toEqual(expect.any(Number))
     expect(root.hasMigratedModuleLevelsToSlots).toBe(true)
     expect(root.slotLevels).toEqual(expect.any(Array))
@@ -25,7 +27,7 @@ describe.skipIf(!HAS_SAVE)('v29 emulator save — module slot levels', () => {
   })
 
   it('reads assist levels from AssistModuleSlot.level after migration', () => {
-    const root = decodePlayerInfoSaveBytes(readFileSync(REAL_SAVE)).parsedRoot as Record<string, unknown>
+    const root = decodePlayerInfoSaveBytes(exportBytes).parsedRoot as Record<string, unknown>
     const mods = readModulesFromSaveRoot(root)
     expect(mods).not.toBeNull()
 

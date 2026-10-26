@@ -7,7 +7,7 @@
  *
  * Needs Node (the decoder reads bytes). For a browser build see `browser-widget.ts`.
  *
- *   npx tsx save-cli.ts <path-to-playerInfo.dat>
+ *   npx tsx save-cli.ts <path-to-tool_export.json>
  */
 import { readFile } from 'node:fs/promises'
 import { decodePlayerInfoSaveBytesAsync } from 'thetowersdk/node'
@@ -48,17 +48,15 @@ function report(parsedRoot: Record<string, unknown>): void {
 }
 
 async function main(): Promise<void> {
-  const keysPath = process.env.TOWER_SAVE_KEYS_FILE
-  const keys = keysPath ? JSON.parse(await readFile(keysPath, 'utf8')) : undefined
   const savePath = process.argv[2]
   if (!savePath) {
-    console.error('Usage: tsx save-cli.ts <path-to-playerInfo.dat>')
+    console.error('Usage: tsx save-cli.ts <path-to-tool_export.json>')
     process.exit(1)
   }
 
   // Decode once. The save root is a plain object and extractors never mutate it,
   // so run as many as you like over the same root.
-  const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile(savePath), { keys })
+  const { parsedRoot } = await decodePlayerInfoSaveBytesAsync(await readFile(savePath))
   report(parsedRoot)
 }
 

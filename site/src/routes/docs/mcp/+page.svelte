@@ -91,7 +91,7 @@
 		<code>describe_schema</code> — a table's declared shape, not one guessed from a sample row
 	</li>
 	<li>
-		<code>decode_save</code> / <code>run_extractor</code> — what is in a <code>playerInfo.dat</code>
+		<code>decode_save</code> / <code>run_extractor</code> — what is in a <code>tool_export.json</code>
 	</li>
 	<li><code>define_term</code> — what an acronym means, and whether it is ambiguous</li>
 	<li><code>plan_effective_path</code> — a path, with the candidates it excluded and why</li>
@@ -204,10 +204,5 @@
 	<a href={href('/docs/towerai/')}>TowerAI →</a>
 </p>
 
-<h2 class="mt-10 text-xl font-semibold">Encrypted Save Keys</h2>
-<p class="mt-3 text-muted">
-	Set <code>TOWER_SAVE_KEYS_FILE</code> in the MCP server environment to a private local JSON file
-	with the caller's base64 <code>encryption</code>, <code>authentication</code> and <code>mask</code>
-	values (32 bytes each). Save tools decrypt locally; keys do not belong in tool arguments.
-	Unencrypted saves require no key file. See <a href={href('/docs/save/')}>Save Files</a> for the key contract.
-</p>
+<h2 class="mt-10 text-xl font-semibold">Official Game Exports</h2>
+<p class="mt-3 text-muted">Save tools accept only <code>tool_export.json</code> created by first tapping Player ID five times to create the initial export and reveal the controls, then using Settings → Toggles → External Tools Export → Manual Export. No decryption keys are accepted. Attempting to bypass save-file encryption violates The Tower Terms of Service. See <a href={href('/docs/save/')}>Game Exports</a>.</p>

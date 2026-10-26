@@ -1,100 +1,28 @@
-import { existsSync, readFileSync } from 'node:fs'
-import { gunzipSync } from 'node:zlib'
 import { describe, expect, it } from 'vitest'
-import { decodeInflatedSave, isGzipped } from '../../src/save-decoder'
-
-/**
- * The input here is a file a person chose, so every failure has to be a sentence.
- *
- * This decoder is the one path in the package that takes bytes from outside — a file input, a
- * phone, a download that may not have finished. Noise and truncation are the ordinary cases, not
- * the exotic ones.
- *
- * The reader already explained what it could: `Invalid NRBF stream` for noise, `RecordType not
- * supported` for a byte that is not a record type. A file cut in half is different — it reads a
- * record header, believes it, and runs off the end. That surfaced as `TypeError: Cannot read
- * properties of undefined (reading '…')` from the middle of the parser: unactionable in a browser,
- * where the usual cause is a partial copy and is the one thing a user can fix.
- */
-/*
- * A real save comes from `TOWER_TEST_SAVE`, the way every other suite here takes one. Nothing
- * reaches outside the package: a fork has only what is committed, and `check-conventions` refuses
- * a path that climbs out of it — which it did to the first version of this file.
- */
-const FIXTURE = process.env.TOWER_TEST_SAVE ?? ''
-
-const noise = Uint8Array.from({ length: 4096 }, (_, index) => (index * 7919) % 256)
-
-describe('a save file that is not a save file', () => {
-  it('refuses empty input', () => {
-    expect(() => decodeInflatedSave(new Uint8Array(0))).toThrow()
+import { decodeSaveFile, decodeInflatedSave, isEncryptedSave } from '../../src/save-decoder'
+import { decodePlayerInfoSaveBytes, decodePlayerInfoSaveBytesAsync } from '../../src/node/decode-save'
+const exportBytes = new TextEncoder().encode(JSON.stringify({ ResearchLevel: [4, 2], BattleHistory: [] }))
+const unsupported = [new Uint8Array(), new Uint8Array([0x54, 0x44, 0x53, 0x31, 1]), new Uint8Array([0x1f, 0x8b, 8]), new Uint8Array([0, 1, 0, 0, 0])]
+describe('official game exports only', () => {
+  it('normalizes official JSON through browser and Node readers', async () => {
+    const expected = { researchLevel: [4, 2], battleHistory: [] }
+    expect(await decodeSaveFile(exportBytes)).toEqual(expected)
+    expect(decodeInflatedSave(exportBytes)).toEqual(expected)
+    expect(decodePlayerInfoSaveBytes(exportBytes).parsedRoot).toEqual(expected)
+    expect((await decodePlayerInfoSaveBytesAsync(exportBytes)).parsedRoot).toEqual(expected)
+    expect(decodePlayerInfoSaveBytes(exportBytes).wasGzip).toBe(false)
   })
-
-  it('refuses noise, and says it is not the format', () => {
-    expect(() => decodeInflatedSave(noise)).toThrow(/NRBF/i)
+  it.each(unsupported)('rejects private, encrypted, compressed and empty input on every reader', async bytes => {
+    expect(() => decodeInflatedSave(bytes)).toThrow('External Tools Export')
+    expect(() => decodePlayerInfoSaveBytes(bytes)).toThrow('violates The Tower Terms of Service')
+    await expect(decodeSaveFile(bytes)).rejects.toThrow('Manual Export')
+    await expect(decodePlayerInfoSaveBytesAsync(bytes)).rejects.toThrow('External Tools Export')
   })
-
-  it('never hangs on hostile bytes', () => {
-    /*
-     * A length field is read from the file itself, so corrupting one is the obvious way to ask a
-     * parser to allocate or loop forever. Every case here has to end.
-     */
-    const cases = [
-      new Uint8Array(2048).fill(0xff),
-      new Uint8Array(2048).fill(0x00),
-      Uint8Array.from({ length: 2048 }, (_, index) => (index % 2 ? 0xff : 0x00)),
-    ]
-
-    for (const bytes of cases) {
-      const started = Date.now()
-      try {
-        decodeInflatedSave(bytes)
-      }
-      catch {
-        /* Throwing is the expected outcome; taking forever is the one being tested against. */
-      }
-      expect(Date.now() - started, 'decode should fail fast, not spin').toBeLessThan(5000)
-    }
+  it('keeps encrypted-file detection without accepting keys', () => {
+    expect(isEncryptedSave(unsupported[1])).toBe(true)
+    expect(isEncryptedSave(exportBytes)).toBe(false)
   })
-
-  it('recognises gzip without decoding it', () => {
-    expect(isGzipped(new Uint8Array([0x1f, 0x8b, 0x08]))).toBe(true)
-    expect(isGzipped(new Uint8Array([0x00, 0x01]))).toBe(false)
-    expect(isGzipped(new Uint8Array(0))).toBe(false)
-  })
-
-  describe.skipIf(!FIXTURE || !existsSync(FIXTURE))('against a real save', () => {
-    /*
-     * Read inside each test, not in the describe body.
-     *
-     * `skipIf` skips the TESTS; vitest still executes the body to discover them, so a read here
-     * fails collection even when the suite is meant to be skipped. This package's publish notes
-     * record that exact trap, and this file was written straight into it anyway.
-     */
-    const realSave = () => gunzipSync(readFileSync(FIXTURE))
-
-    it('explains a truncated file instead of leaking a TypeError', () => {
-      const real = realSave()
-      const half = real.subarray(0, Math.floor(real.length / 2))
-
-      let thrown: Error | undefined
-      try {
-        decodeInflatedSave(new Uint8Array(half))
-      }
-      catch (error) {
-        thrown = error as Error
-      }
-
-      expect(thrown, 'half a save should not decode').toBeDefined()
-      expect(thrown!.message).toMatch(/incomplete or corrupt/)
-      expect(thrown!.message).not.toMatch(/Cannot read properties/)
-
-      /* The original stays reachable, so a bug report still says where it happened. */
-      expect((thrown as Error & { cause?: unknown }).cause).toBeInstanceOf(RangeError)
-    })
-
-    it('still decodes the whole file', () => {
-      expect(Object.keys(decodeInflatedSave(new Uint8Array(realSave()))).length).toBeGreaterThan(100)
-    })
+  it('rejects unrelated JSON rather than inventing account data', async () => {
+    await expect(decodeSaveFile(new TextEncoder().encode('{"unrelated":true}'))).rejects.toThrow()
   })
 })

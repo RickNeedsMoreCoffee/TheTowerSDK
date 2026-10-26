@@ -6,8 +6,8 @@ Decoding playerInfo.dat in Node.
 
 | File | Purpose | Exports |
 |---|---|---|
-| `decode-save.ts` | — | decodePlayerInfoSaveBytes, decodePlayerInfoSaveBytesAsync |
-| `index.ts` | Decoding `playerInfo.dat`. | — |
+| `decode-save.ts` | Reads official in-game JSON exports in Node. | decodePlayerInfoSaveBytes, decodePlayerInfoSaveBytesAsync |
+| `index.ts` | This domain is flat: | — |
 | `types.ts` | The types `node/` exports, in one place — so a neighbouring module finds the shape it needs here instead of declaring its own under a second name. | PlayerInfoSaveDecodeResult |
 
 [← src](../MAP.md) · [← the package](../../MAP.md)

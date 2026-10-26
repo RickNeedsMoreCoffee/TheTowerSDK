@@ -5,7 +5,7 @@ import { decodeSaveFile, decodeInflatedSave } from '../../src/save-decoder'
 import { looksLikeToolExportJson, readToolExportJson } from '../../src/save/access/json'
 import { listImportableBattleRuns } from '../../src/save/battle/history'
 import { readLabsFromSaveRoot } from '../../src/save/labs/read'
-import { towerAndroidExportPaths } from '../../src/save/access/path'
+import { towerAndroidExportPaths, TOWER_SAVE_FILENAMES } from '../../src/save/access/path'
 import { readVaultV29ProgressFromSaveRoot } from '../../src/save/vault/v29-progress'
 
 const exportRoot = {
@@ -30,12 +30,12 @@ describe('official JSON tool export', () => {
     expect(listImportableBattleRuns(root.parsedRoot)[0]).toMatchObject({ tier: 8, wave: 1234, coinsEarned: 1e10 })
     expect(readLabsFromSaveRoot(root.parsedRoot)?.researches.slice(0, 2).map(row => row.level)).toEqual([7, 12])
   })
-  it('agrees between Node, browser, inflated and gzip paths', async () => {
+  it('agrees between Node, browser and loaded export bytes', async () => {
     const expected = decodePlayerInfoSaveBytes(bytes).parsedRoot
     expect(await decodeSaveFile(bytes)).toEqual(expected)
     expect(decodeInflatedSave(bytes)).toEqual(expected)
-    expect(decodePlayerInfoSaveBytes(gzipSync(bytes)).parsedRoot).toEqual(expected)
-    expect(await decodeSaveFile(gzipSync(bytes))).toEqual(expected)
+    expect(() => decodePlayerInfoSaveBytes(gzipSync(bytes))).toThrow('External Tools Export')
+    await expect(decodeSaveFile(gzipSync(bytes))).rejects.toThrow('External Tools Export')
   })
   it('supports UTF-8 BOM and whitespace', () => {
     expect(readToolExportJson(new TextEncoder().encode('\uFEFF \n' + JSON.stringify(exportRoot)))).toEqual(decodeInflatedSave(bytes))
@@ -65,6 +65,7 @@ describe('official JSON tool export', () => {
     },
   )
   it('targets external persistentDataPath, including Android secondary users', () => {
+    expect(TOWER_SAVE_FILENAMES).toEqual(['tool_export.json'])
     expect(towerAndroidExportPaths()).toEqual([
       '/storage/emulated/0/Android/data/com.TechTreeGames.TheTower/files/tool_export.json',
       '/sdcard/Android/data/com.TechTreeGames.TheTower/files/tool_export.json',
