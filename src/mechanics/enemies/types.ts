@@ -32,6 +32,12 @@ export interface ResolvedEnemyDropsLabs {
 export interface EnemyDropsSimulationInput {
   tier: number
   targetWave: number
+  /** False disables card and mastery effects; omitted preserves legacy equipped calculations. */
+  enemyBalanceActive?: boolean
+  /** Explicit equipment state; omitted preserves legacy equipped-card calculations. */
+  waveSkipActive?: boolean
+  /** False disables Fetch loot. Omitted preserves the legacy active Fetch baseline. */
+  fetchActive?: boolean
   /** Game card levels 1–7. */
   enemyBalanceCardLevel: number
   enemyBalanceMasteryLevel: number

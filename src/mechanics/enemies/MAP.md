@@ -17,11 +17,13 @@ Enemy stats, types, resistances, elite spawns and drops.
 | `index.ts` | Enemies: | — |
 | `level-skip.ts` | Enemy level skip: | ATTACK_LEVEL_SKIP_UTILITY_INDEX, HEALTH_LEVEL_SKIP_UTILITY_INDEX, ATTACK_LEVEL_SKIP_MODULE_CLUSTER_INDEX, HEALTH_LEVEL_SKIP_MODULE_CLUSTER_INDEX (+46 more) |
 | `overcharge-hit-scaling.ts` | Overcharge tower hit scaling. | ENEMY_HEAT_UP_MULTIPLIER_PER_HIT, overchargeVolleyIndex, overchargeVolleyDamageMultiplier, enemyHeatUpMultiplierThroughHit (+1 more) |
+| `ray-attack.ts` | Ray charged shots are distinct from the wave panel's plain base-damage number. | RAY_ATTACK_PROFILE, rayAttackPayloadDamage |
 | `stat-display.ts` | Run-header enemy HP/damage display modifiers from trade-off perks and labs. | ENEMY_HEADER_PERK_INDICES, IMPROVE_TRADE_OFF_PERKS_LAB_INDEX, TRADE_OFF_ENEMY_HP_BENEFIT_BASE, TRADE_OFF_ENEMY_DMG_BENEFIT_BASE (+23 more) |
 | `stats-simplified.ts` | Enemy stats at a wave, simplified: | ENEMY_STATS_PERK_KEYS, defaultEnemyStatsPerkState, SIMPLIFIED_ENEMY_WAVE_TYPES, getEnemyStatsBattleConditions (+4 more) |
 | `type-mix.ts` | The ordinary enemy mix: | ENEMY_TYPE_BASE_COIN_VALUE, OrdinaryEnemyType, EnemyTypeCounts, MEASURED_ENEMY_TYPE_KILLS (+4 more) |
 | `type-mults.ts` | Enemy-type health and damage multipliers, relative to a basic enemy. | ENEMY_MULT_BY_TYPE_TABLE |
 | `types.ts` | The types `mechanics/enemies/` exports, in one place — so a neighbouring module finds the shape it needs here instead of declaring its own under a second name. | ModuleShatterRarity, ResolvedEnemyDropsLabs, EnemyDropsSimulationInput, EnemyDropsWaveContext (+47 more) |
+| `vampire-beam.ts` | — | VAMPIRE_DRAIN_MAX_TOWER_HEALTH_FRACTION_PER_SECOND, vampireGarlicMaxHealthDamageRate |
 | `wave-info-labs.ts` | Enemy research labs on Wave Info rows. | WAVE_INFO_ENEMY_LAB_SLUG_BY_TYPE, computeEnemyLabLevelFromMap, waveInfoEnemyLabSlugForRow, waveInfoEnemyLabMultiplierForRow (+2 more) |
 | `wave-info-pipeline.ts` | Wave Info enemy stat pipeline — single orchestrator for `/calculators/enemy-stats`. | WAVE_INFO_PIPELINE_STAGE_NAMES, WaveInfoPipelineStageName, computeWaveInfoDisplayStats |
 | `wave-panel.ts` | The enemy wave panel: | ENEMY_WAVE_TYPE_OPTIONS, DEFAULT_ENEMY_STATS_MODIFIERS, getImproveTradeOffLabPct, getTradeOffImproveMult (+6 more) |

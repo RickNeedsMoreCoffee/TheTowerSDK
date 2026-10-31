@@ -103,6 +103,8 @@ export function readGuardiansFromSaveRoot(root: Record<string, unknown> | null):
   if (!root) return null
 
   const warnings: string[] = []
+  const inGuild = typeof root.inGuild === 'boolean' ? root.inGuild : null
+  if (inGuild === null) warnings.push('Guild membership is unavailable; Guardian battle eligibility is not established.')
   const guardianUnlocked = readSaveBoolean(root[GUARDIANS_SAVE_UNLOCKED_KEY])
   const chipUnlocked = Array.isArray(root[GUARDIANS_SAVE_CHIP_UNLOCKED_KEY])
     ? (root[GUARDIANS_SAVE_CHIP_UNLOCKED_KEY] as unknown[]).map(readSaveBoolean)
@@ -155,6 +157,7 @@ export function readGuardiansFromSaveRoot(root: Record<string, unknown> | null):
 
   return {
     guardianUnlocked,
+    inGuild,
     chips,
     equippedChips,
     skins,

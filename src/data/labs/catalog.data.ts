@@ -7660,6 +7660,8 @@ export const LAB_CATALOG: readonly LabCatalogRecord[] = [
     slug: "recharge_demon_mode",
     name: "Recharge Demon Mode",
     category: "Cards",
+    // Research cost/time data only; the gameplay recharge-effect curve is missing.
+    // Recharge is measured in waves: this zero base is NOT an instant cooldown.
     base: 0,
     levels: [
       { level: 1, duration: "124:59:59", cost: 550000000000 },
@@ -7690,6 +7692,8 @@ export const LAB_CATALOG: readonly LabCatalogRecord[] = [
     slug: "recharge_nuke",
     name: "Recharge Nuke",
     category: "Cards",
+    // Research cost/time data only; the gameplay recharge-effect curve is missing.
+    // Recharge is measured in waves: this zero base is NOT an instant cooldown.
     base: 0,
     levels: [
       { level: 1, duration: "125:00:00", cost: 550000000000 },
@@ -7705,6 +7709,8 @@ export const LAB_CATALOG: readonly LabCatalogRecord[] = [
     slug: "recharge_second_wind",
     name: "Recharge Second Wind",
     category: "Cards",
+    // Research cost/time data only; the gameplay recharge-effect curve is missing.
+    // Recharge is measured in waves: this zero base is NOT an instant cooldown.
     base: 0,
     levels: [
       { level: 1, duration: "124:59:59", cost: 550000000000 },

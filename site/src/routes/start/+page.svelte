@@ -16,7 +16,7 @@
 <div class="mt-8 max-w-3xl space-y-10">
 	<section>
 		<h2 class="text-xl font-medium">1. Install TheTowerSDK</h2>
-		<p class="mt-2 text-sm text-muted">For the current export-only reader, follow the <a href={href('/docs/install/')}>source-build instructions</a>.</p>
+		<p class="mt-2 text-sm text-muted">Use the official game export for account imports. See the <a href={href('/docs/install/')}>installation guide</a>.</p>
 		<p class="mt-2 text-sm text-muted">
 			Add the package to your app or tool repo. Pin a version when you want frozen game numbers.
 		</p>

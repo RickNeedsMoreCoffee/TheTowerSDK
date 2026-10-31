@@ -42,6 +42,10 @@ function readRelicUnlockedFlags(raw: unknown, catalogLength: number): boolean[] 
       flags[index] = item
       continue
     }
+    if (typeof item === 'number') {
+      flags[index] = isRelicStateUnlocked(item)
+      continue
+    }
     if (item && typeof item === 'object') {
       const record = item as Record<string, unknown>
       if ('unlocked' in record) {

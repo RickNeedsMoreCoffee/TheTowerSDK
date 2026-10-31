@@ -206,3 +206,4 @@
 
 <h2 class="mt-10 text-xl font-semibold">Official Game Exports</h2>
 <p class="mt-3 text-muted">Save tools accept only <code>tool_export.json</code> created by first tapping Player ID five times to create the initial export and reveal the controls, then using Settings → Toggles → External Tools Export → Manual Export. No decryption keys are accepted. Attempting to bypass save-file encryption violates The Tower Terms of Service. See <a href={href('/docs/save/')}>Game Exports</a>.</p>
+

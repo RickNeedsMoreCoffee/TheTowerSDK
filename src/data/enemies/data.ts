@@ -38,10 +38,13 @@ export const FLEET_ENEMY_FACTS = [
   'On lower tiers they begin at wave 15000 on Tier 1 and arrive 250 waves earlier for each higher tier, then repeat every 100 waves after their first appearance.',
 ] as const
 
+/** Fleet behavior updated in official v28.3; older pre-rebalance summaries were stale.
+ * https://www.techtreegames.com/post/v28-3-patch-notes
+ */
 export const FLEET_ENEMY_TYPE_FACTS = [
-  'Saboteur has 2x speed and 20x health and disables a random ultimate weapon when it hits the tower, although the wall can block that debuff behavior.',
-  'Commander has 0.5x speed and 20x health and applies a 2x nearby enemy health aura.',
-  'Overcharge has 1x speed and 20x health and fires a returning projectile that doubles damage with each later hit.',
+  'Saboteur has 2x speed and 20x health; each attack lowers one ultimate weapon main-stat level, restored when the Saboteur dies. The wall can block the debuff.',
+  'Commander has 0.2x basic enemy speed and 20x health; each pulse increases nearby enemy health, mass and speed by 15%, with mass and speed capped at eight boosts.',
+  'Overcharge has 0.2x basic enemy speed and 20x health; its damage starts at tier wave-one damage and grows by 1.4x per successful hit. It fires a parting shot on death after entering tower range.',
 ] as const
 
 /** Commander aura radius scale (game v29.0.0 float const; no formula). */
@@ -114,9 +117,9 @@ export const ENEMY_TYPE_SUMMARIES: readonly EnemyTypeSummary[] = [
   { name: 'Vampire', summary: '2x basic health, drains 2% tower max health per second, suppresses regen effects' },
   { name: 'Ray', summary: 'basic health, charges 30 seconds then fires for 2x basic enemy damage, immune to knockback' },
   { name: 'Scatter', summary: '2x basic health and repeatedly splits with halved health' },
-  { name: 'Saboteur', summary: '20x basic health and disables a random ultimate weapon on tower impact' },
-  { name: 'Commander', summary: '20x basic health and buffs nearby enemies' },
-  { name: 'Overcharge', summary: '20x basic health and uses escalating projectile damage behavior' },
+  { name: 'Saboteur', summary: '20x basic health; lowers an ultimate weapon main-stat level per attack until killed' },
+  { name: 'Commander', summary: '20x basic health; pulses +15% enemy health, mass and speed, with eight boosts maximum for mass/speed' },
+  { name: 'Overcharge', summary: '20x basic health; starts with tier wave-one damage and gains 1.4x damage per successful hit, plus an in-range parting shot' },
 ] as const
 
 export const ENEMY_LAB_FACTS = [

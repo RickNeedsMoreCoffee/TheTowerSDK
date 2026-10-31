@@ -9,6 +9,8 @@ import {
   deathWaveQuantity,
   innerLandMineDamage,
   innerLandMineQuantity,
+  missileAmplifierSlope,
+  ultimateCritCardMultiplier,
   smartMissileCooldown,
   smartMissileDamage,
   smartMissileDamagePerSecond,
@@ -31,6 +33,34 @@ import fixtures from '../../fixtures/mechanics/effective-paths-ultimate-weapons.
 
 const close = (ours: number, sheet: number, digits = 12) =>
   expect(Math.abs(ours / sheet - 1)).toBeLessThan(10 ** -digits)
+
+describe('shared Missile Amplifier slope', () => {
+  it.each([
+    [0, false, 1], [0, true, 1], [25, false, 38.5], [25, true, 76],
+  ] as const)('uses lab %i with Tactical Barrage %s', (level, tacticalBarrage, expected) => {
+    expect(missileAmplifierSlope(level, tacticalBarrage)).toBe(expected)
+  })
+  it('feeds the canonical repeated-hit average without changing its base', () => {
+    expect(ultimateWeaponHeatUp(missileAmplifierSlope(25, false), 2)).toBe(20.25)
+    expect(ultimateWeaponHeatUp(missileAmplifierSlope(25, true), 2)).toBe(39)
+  })
+})
+
+describe('additional Ultimate Crit card multiplier', () => {
+  const base = { hasCard: true, cardChanceFraction: 0.03, hasMastery: false, masteryLabLevel: 9, criticalFactor: 35.85000076 }
+  it('is neutral when the card is not equipped, including unlocked mastery', () => {
+    expect(ultimateCritCardMultiplier({ ...base, hasCard: false, hasMastery: true })).toBe(1)
+  })
+  it('uses fractional card chance and the tower critical factor', () => {
+    expect(ultimateCritCardMultiplier(base)).toBeCloseTo(2.0455000228, 12)
+  })
+  it('adds mastery once, independently of the ordinary UW critical folding', () => {
+    expect(ultimateCritCardMultiplier({ ...base, hasMastery: true })).toBeCloseTo(3.19555004788, 12)
+  })
+  it('does not create damage when the critical factor has no bonus', () => {
+    expect(ultimateCritCardMultiplier({ ...base, criticalFactor: 1 })).toBe(1)
+  })
+})
 
 describe('the stats that are just base plus substat', () => {
   for (const [index, c] of fixtures.plainStats.entries()) {

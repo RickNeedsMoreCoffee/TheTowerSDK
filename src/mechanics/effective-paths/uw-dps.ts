@@ -45,7 +45,9 @@ interface AreaOfEffectCard {
 }
 
 /**
- * `EP_DW_DPS` — Death Wave.
+ * `EP_DW_DPS` — the Effective Paths aggregate Death Wave estimate.
+ * This sheet scenario estimate is not an event model of the persistent damage
+ * pool. Quantity is Effect Wave count, not a number of pool additions per activation.
  *
  * The `5 + 1.5 × amp` term is the number of enemies a wave is assumed to pass
  * through, not a damage multiplier, which is why the Damage Amplifier lab pays

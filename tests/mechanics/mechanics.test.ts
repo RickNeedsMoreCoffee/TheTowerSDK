@@ -54,7 +54,7 @@ import {
 import { getBasicEnemyWaveStats } from '../../src/mechanics/enemies/wave-stats'
 import { getEnemyWaveStats, getWaveBaseStats } from '../../src/mechanics/enemies/wave-stats'
 import { skipDecayWaveInterval } from '../../src/mechanics/battle-conditions/conditions'
-import { chronoSlowStrength } from '../../src/mechanics/combat/chrono-field'
+import { chronoSlowStrength, chronoLoopMotion } from '../../src/mechanics/combat/chrono-field'
 import { shockwaveFrequencySeconds } from '../../src/mechanics/combat/shockwave'
 import { rangeSoftCap } from '../../src/mechanics/combat/tower-range'
 import { poisonSwampTickDamage, swampStunRoll } from '../../src/mechanics/combat/poison-swamp'
@@ -588,6 +588,17 @@ describe('mechanics/shockwave', () => {
 describe('mechanics/chrono-field', () => {
   it('mid knot returns 0.75 slow strength', () => {
     expect(chronoSlowStrength(0.5)).toBe(0.75)
+  })
+  it('separates level-eight rotation from its measured forty-percent radial slow', () => {
+    expect(chronoLoopMotion({ unlocked: true, level: 8 })).toEqual({
+      radialSpeedMultiplier: 0.6, hiddenSlowFraction: 0.4, rotationRadiansPerSecond: 0.25,
+    })
+  })
+  it('distinguishes locked from unlocked level zero and validates measured bounds', () => {
+    expect(chronoLoopMotion({ unlocked: false, level: 0 }).radialSpeedMultiplier).toBe(1)
+    expect(chronoLoopMotion({ unlocked: true, level: 0 }).radialSpeedMultiplier).toBe(0.975)
+    expect(chronoLoopMotion({ unlocked: true, level: 13 }).hiddenSlowFraction).toBe(0.65)
+    expect(() => chronoLoopMotion({ unlocked: true, level: 14 })).toThrow(RangeError)
   })
 })
 

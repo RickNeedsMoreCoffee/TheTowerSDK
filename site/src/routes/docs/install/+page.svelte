@@ -9,16 +9,16 @@
 <p class="mt-3 text-muted">
 	The SDK runs in Node 20 or newer and in browsers. Catalogs and formulas need no setup;
 	account imports accept only official game JSON exports. Optional wiki and Sheets integrations
-	use network access. These docs describe the export-only repository source; published npm releases may have a different interface.
+	use network access. These docs cover the published SDK version {SDK_VERSION}.
 </p>
 
 <div class="mt-6">
-	<CodeBlock code="npm install thetowersdk" />
+	<CodeBlock code={`npm install thetowersdk@${SDK_VERSION} --save-exact`} />
 </div>
 
 <h2 class="mt-10 text-xl font-semibold">Build From Source</h2>
 <p class="mt-3 text-muted">
-	Build from source to use the export-only reader described here. Build the SDK,
+	For SDK development, build from source instead of installing from npm. Build the SDK,
 	pack it, and install the generated tarball in your application. Record the source commit for reproducibility.
 </p>
 <div class="mt-4">
@@ -38,7 +38,7 @@ npm install /path/to/TheTowerSDK/thetowersdk-${SDK_VERSION}.tgz`} />
 	upgrade deliberately after a patch.
 </p>
 <div class="mt-4">
-	<CodeBlock code="npm install thetowersdk" />
+	<CodeBlock code={`npm install thetowersdk@${SDK_VERSION} --save-exact`} />
 </div>
 
 <h2 class="mt-10 text-xl font-semibold">What A Version Means</h2>

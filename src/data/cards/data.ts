@@ -326,7 +326,11 @@ const cardTemplates: CardTemplate[] = [
     description: 'The tower becomes super for 15 sec, tower projectile damage increased by x (30 sec cooldown)',
     rarity: 'epic',
     levelType: 'multi',
-    levelValues: [4.75, 5.51, 6.27, 7.03, 7.79, 8.55, 9.5],
+    // Base card values. The separate Super Tower Bonus lab contributes up to
+    // 1.90x; storing its max-lab display values here applies that lab twice.
+    // https://the-tower-idle-tower-defense.fandom.com/wiki/Cards
+    // https://the-tower.notion.site/Super-Tower-Bonus-1c291383b93f8053af72f09a0e8c031d
+    levelValues: [2.5, 2.9, 3.3, 3.7, 4.1, 4.5, 5],
     masteryName: 'Ultimate Tower',
     masteryDescription: 'Causes 35% of card\'s multiplier effect to increase all Ultimate Weapon damage and decreases Super Tower Cooldown',
     masteryType: 'duration',

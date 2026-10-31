@@ -14,7 +14,7 @@
  * ## Why this file exists
  *
  * Coins from kills is `kills x coin value`, and the coin value depends entirely
- * on WHICH enemies died: basic is worth 1, fast and ranged 2, tank 4. The
+ * on WHICH enemies died: basic normally drops 0, fast and ranged 2, tank 4. The
  * shipped coin simulation replaces that whole question with one blended
  * constant, `RESOURCE_DROPS_AVG_ENEMY_COIN_WEIGHT = 1.15`.
  *
@@ -32,10 +32,11 @@
  *
  * The consequence for coins:
  *
- *     measured weight   2.34 coins per kill, relative to a basic
+ *     historical weight 2.34 used an incorrect Basic=1 assumption
  *     superseded guess  1.15
  *
- * That is independent of, and compounds with, the 3-4x kill-volume shortfall in
+ * Critical Coin is now a separate explicit per-Basic reward input; it must not
+ * be replaced by an unconditional Basic=1. This is independent of the shortfall in
  * `kills-per-wave-vs-save.test.ts`.
  *
  * ## The correction this file already needed once
@@ -53,9 +54,9 @@
  *
  * ## What this does NOT claim*/
 
-/** Base coin value of each ordinary enemy type, relative to a basic. */
+/** Base coins before reward multipliers; Basics require the separate Critical Coin proc. */
 export const ENEMY_TYPE_BASE_COIN_VALUE = {
-  basic: 1,
+  basic: 0,
   fast: 2,
   tank: 4,
   ranged: 2,

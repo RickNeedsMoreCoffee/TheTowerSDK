@@ -32,6 +32,17 @@ const templates = UNIQUE_MODULE_TEMPLATES as readonly {
 }[]
 
 describe('unique modules correspond to the shipped catalog', () => {
+  it('keeps Being Annihilator at five guaranteed shots while its rarity changes passive chance', () => {
+    const module = UNIQUE_MODULE_TEMPLATES.find(row => row.name === 'Being Annihilator')!
+    expect(typeof module.description).toBe('function')
+    if (typeof module.description !== 'function') throw new Error('Being Annihilator description must render rarity chance')
+    expect(module.rarityBonuses?.map(row => row.value)).toEqual([5, 7, 10, 14])
+    for (const chance of [5, 7, 10, 14]) {
+      const text = module.description(chance)
+      expect(text).toContain(`Gain ${chance}% Super Crit chance.`)
+      expect(text).toContain('next 5 shots')
+    }
+  })
   it('every listed module exists in the catalog, with the same type', () => {
     const byName = new Map(templates.map(t => [t.name, t]))
     const problems: string[] = []

@@ -8,6 +8,12 @@
  *
  * `enemyAttackCount` increments in the closures but is not read in this path.
  * Generic `Enemy$$Attack` applies `enemyDamage × pow(1.04, enemyAttackCount)` separately.
+ *
+ * Scope: this is the local volley expression, not the complete progression of
+ * enemyDamage across successful attacks. Official v28.3 notes describe a 1.4x
+ * successful-hit increase; callers must resolve that state update separately.
+ * Passing a constant baseAdjustedDmg cannot establish current full-battle parity.
+ * https://www.techtreegames.com/post/v28-3-patch-notes
  */
 /* ── file map ─────────────────────────────────────────────────────────────────
  * exports    ENEMY_HEAT_UP_MULTIPLIER_PER_HIT, overchargeVolleyIndex, overchargeVolleyDamageMultiplier, enemyHeatUpMultiplierThroughHit, rawOverchargeHitDamageBeforeReduction
@@ -37,7 +43,7 @@ export function enemyHeatUpMultiplierThroughHit(hitNumber: number): number {
   return ENEMY_HEAT_UP_MULTIPLIER_PER_HIT ** (hitNumber - 1)
 }
 
-/** Pre-DR tower hit damage for Overcharge contact `hitNumber`. */
+/** Local pre-DR volley expression; the caller owns base-damage state progression. */
 export function rawOverchargeHitDamageBeforeReduction(input: OverchargeRawHitDamageInput): number {
   const { hitNumber, baseAdjustedDmg, includeHeatUp = false } = input
   if (hitNumber < 1 || baseAdjustedDmg <= 0) return 0

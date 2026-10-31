@@ -60,7 +60,7 @@ export const ultimateWeaponCalculator: CalculatorBuilder<UltimateWeaponInput, Ul
       key: 'stat',
       label: 'Stat',
       kind: 'select',
-      options: WEAPONS.flatMap(weapon => weapon.stats).map(stat => ({ value: stat, label: stat })),
+      options: [...new Set(WEAPONS.flatMap(weapon => weapon.stats))].map(stat => ({ value: stat, label: stat })),
       help: 'Stats differ per weapon — read `statsForWeapon` off the result to narrow this list.',
     },
     { key: 'currentLevel', label: 'Current Level', kind: 'number', min: 0 },

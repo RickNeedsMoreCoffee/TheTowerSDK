@@ -101,9 +101,9 @@ export function buildWaveContext(input: EnemyDropsSimulationInput): EnemyDropsWa
   const targetWave = clamp(Math.floor(input.targetWave), 1, 1_000_000)
   const ebLevel = clampCardGameLevel(input.enemyBalanceCardLevel)
   const wsLevel = clampCardGameLevel(input.waveSkipCardLevel)
-  const ebMastery = clampCardMasteryLevel(input.enemyBalanceMasteryLevel)
+  const ebMastery = input.enemyBalanceActive === false ? -1 : clampCardMasteryLevel(input.enemyBalanceMasteryLevel)
   const wsMastery = clampCardMasteryLevel(input.waveSkipMasteryLevel)
-  const skipChance = cardLevelPercent('ws', wsLevel)
+  const skipChance = input.waveSkipActive === false ? 0 : cardLevelPercent('ws', wsLevel)
   const expectedSkips = waveSkipExpectedSkipsPerProc(wsMastery)
   const wsMult = waveSkipResourceMultiplier(skipChance, expectedSkips)
   const parsedBossInterval = Math.floor(Number(input.wavesPerBoss))
@@ -115,10 +115,10 @@ export function buildWaveContext(input: EnemyDropsSimulationInput): EnemyDropsWa
   return {
     tier,
     targetWave,
-    enemyBalanceMult: cardLevelMulti('eb', ebLevel),
+    enemyBalanceMult: input.enemyBalanceActive === false ? 1 : cardLevelMulti('eb', ebLevel),
     waveSkipSkipChance: skipChance,
     waveSkipExpectedSkipsPerProc: expectedSkips,
-    waveSkipMasteryDoubleChance: cardMasteryPercent('ws', wsMastery),
+    waveSkipMasteryDoubleChance: input.waveSkipActive === false ? 0 : cardMasteryPercent('ws', wsMastery),
     avgEliteCellDropsPerKill: averageEliteCellsPerKill(tier),
     avgEliteKillsPerWave: avgEliteKillsPerWaveFromMastery(ebMastery),
     cellsPerKillMult: cellsPerKillBonusMult(input.cellsPerKillBonusLevel),

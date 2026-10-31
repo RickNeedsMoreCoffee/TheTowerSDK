@@ -8,14 +8,11 @@ The checks and generators. Each is a `package.json` script; none is called from 
 |---|---|---|
 | `audit-package-contents.mjs` | Assert what the published tarball actually contains — not what `files` says it should. | — |
 | `audit-published-surface.mjs` | What does an installed copy of this package actually contain, and how much of it can a consumer reach? | — |
-| `build-asset-manifest.mjs` | Generate the Tower asset manifest from the files that actually exist. | — |
 | `build-daily-mission-goals.mjs` | Emit the goal a daily mission asks for at each of its tiers. | DailyMissionGoal, DAILY_MISSION_GOALS, DAILY_MISSION_GOALS_BY_INDEX |
 | `build-doc-snippets.mjs` | Extract named code snippets from the canonical sources, for every docs surface to share. | — |
-| `build-game-asset-manifest.mjs` | Generate the GAME asset catalogue from `tower-assets/assets/game/manifest.json`. | — |
 | `build-lab-categories.mjs` | Emit lab categories from the versioned lab-categories.json fixture. | LAB_CATEGORY_BY_INDEX, LAB_CATEGORY_RESEARCH_COUNT |
 | `build-lab-v29-curves.mjs` | Build the supported v29 lab reference curves at save indices 242-252. | — |
 | `build-patch-notes.mjs` | Turn the raw patch-notes archive into the dataset that ships. | — |
-| `build-vault-v29.mjs` | Read the v29 vault workbook into a dataset the package can compare against later. | VaultV29Category, VaultV29Status, VaultV29Upgrade, VaultV29EnemyUpgrade (+6 more) |
 | `build-wiki.mjs` | Render the GitHub wiki from this package's own docs. | — |
 | `check-acronym-expansions.ts` | Invented expansions of real acronyms. | PACKAGE_ROOT, AcronymFinding, buildAcronymAuthority, buildNameAuthority (+4 more) |
 | `check-conventions.mjs` | Enforces the package's structural conventions. | — |

@@ -37,6 +37,9 @@ import {
   bounceShotMultiplier,
   bounceShotTargets,
   criticalChance,
+  criticalFactorStat,
+  superCriticalChanceStat,
+  superCriticalMultiplierStat,
   criticalMultiplier,
   damagePerMeter,
   maxRendArmourMultiplier,
@@ -73,6 +76,8 @@ import {
   deathWaveQuantity,
   innerLandMineDamage,
   innerLandMineQuantity,
+  missileAmplifierSlope,
+  ultimateCritCardMultiplier,
   smartMissileCooldown,
   smartMissileDamage,
   smartMissileDamagePerSecond,
@@ -419,35 +424,26 @@ export function computeEffectiveDamage(
   function critFactor(): number {
     if (config.runType === 'Attack Disso') return 1
     const source = stat('Critical Factor')
-    return (config.criticalFactorBase * (1 + 0.03 * lab.criticalFactor)
-      + cannonSubstat('Critical Factor'))
-      * source.enhancementMultiplier
-      * (1 + source.relicPct)
-      * (1 + source.vaultPct)
+    return criticalFactorStat({ base: config.criticalFactorBase, labLevel: lab.criticalFactor,
+      substat: cannonSubstat('Critical Factor'), enhancementMultiplier: source.enhancementMultiplier,
+      relicPct: source.relicPct, vaultPct: source.vaultPct })
   }
 
   function superCritChance(): number {
     if (config.runType === 'Attack Disso') return 0
-    return (shadow.flatSuperCritChanceBonus ?? 0)
-      + config.superCritChanceBase
-      + cannonSubstat('Super Crit Chance')
-      + 0.001 * lab.superCritChance
-      + (card('Critical Chance Mastery').active ? 0.01 * (1 + critChanceMasteryLevel) : 0)
-      + unique('Being Annihilator')
+    return superCriticalChanceStat({ base: config.superCritChanceBase,
+      substat: cannonSubstat('Super Crit Chance'), labLevel: lab.superCritChance,
+      flatBonus: shadow.flatSuperCritChanceBonus, beingAnnihilator: unique('Being Annihilator'),
+      hasCriticalChanceMastery: card('Critical Chance Mastery').active, masteryLevel: critChanceMasteryLevel })
   }
 
   function superCritMultiplier(): number {
     if (config.runType === 'Attack Disso') return 1
     const source = stat('Super Critical Mult')
-    const mastery = card('Critical Chance Mastery').active
-      ? 1 + 0.01 * (1 + critChanceMasteryLevel)
-      : 1
-    return (config.superCritMultiBase * (1 + 0.02 * lab.superCritMulti)
-      + cannonSubstat('Super Crit Multi'))
-      * source.enhancementMultiplier
-      * (1 + source.relicPct)
-      * (1 + source.vaultPct)
-      * mastery
+    return superCriticalMultiplierStat({ base: config.superCritMultiBase, labLevel: lab.superCritMulti,
+      substat: cannonSubstat('Super Crit Multi'), enhancementMultiplier: source.enhancementMultiplier,
+      relicPct: source.relicPct, vaultPct: source.vaultPct,
+      hasCriticalChanceMastery: card('Critical Chance Mastery').active, masteryLevel: critChanceMasteryLevel })
   }
 
   /** `DN5`. Being Annihilator lets bullets crit five times over. */
@@ -687,7 +683,7 @@ export function computeEffectiveDamage(
    * why that estimate multiplies the heat-up rather than sitting beside it.
    */
   const tacticalBarrageSeconds = unique('Tactical Barrage')
-  const missileAmplifier = 1 + 1.5 * lab.missileAmplifier * (tacticalBarrageSeconds > 0 ? 2 : 1)
+  const missileAmplifier = missileAmplifierSlope(lab.missileAmplifier, tacticalBarrageSeconds > 0)
 
   /** `EI5` — the Smart Missile heat-up, which Spotlight Missiles share. */
   const missileHeatUp = ultimateWeaponHeatUp(
@@ -884,14 +880,13 @@ export function computeEffectiveDamage(
    * The Ultimate Crit card, which is the *only* place the mastery appears —
    * it raises the share of the crit factor ultimate weapons receive.
    */
-  const ultimateCritCard
-    = config.cardsEquipped && card('Ultimate Crit').active
-      ? 1 + (card('Ultimate Crit').value
-        + (card('Ultimate Crit Mastery').active
-          ? 0.0033 * (1 + lab.ultimateCritMastery + levels.coin.ultimateCritMastery)
-          : 0))
-      * (critInput.criticalFactor - 1)
-      : 1
+  const ultimateCritCard = ultimateCritCardMultiplier({
+    hasCard: config.cardsEquipped && card('Ultimate Crit').active,
+    cardChanceFraction: card('Ultimate Crit').value,
+    hasMastery: card('Ultimate Crit Mastery').active,
+    masteryLabLevel: lab.ultimateCritMastery + levels.coin.ultimateCritMastery,
+    criticalFactor: critInput.criticalFactor,
+  })
 
   /** `EO5`. */
   const ultimateWeapons = ultimateWeaponTotalDamage({

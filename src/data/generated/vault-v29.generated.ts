@@ -1,23 +1,12 @@
 /**
- * GENERATED from game data for version v29.0.0 — vault catalog (developer workbook, with the
- * shipped key costs laid over it where they map cleanly).
+ * Versioned v29.0.0 vault reference, compiled from a developer-supplied workbook and released
+ * upgrade key costs. See VAULT_V29_PROVENANCE for the independent comparison source.
  *
- * Do not treat as fully verified. Re-run `npm run vault:v29` only when regenerating
- * from the workbook; Harmony patches below are hand-applied.
+ * In-game spot-checks remain pending, so VAULT_V29_VERIFIED stays false. This reference is
+ * separate from the vault tree API in src/data/vault; it does not establish gameplay behavior.
  *
- * VAULT_V29_VERIFIED stays false. The Enemy tree carries the shipped integer ladders; the
- * workbook's Enemy ladders were placeholder floats and must not be treated as shipping costs.
- * Power rows that map cleanly carry a single tier-1 key cost. There is no confirmed 1×/2×/4× key
- * multiplier for v29 (the wiki's claim remains unverified), and workbook progressive ladders like
- * [10,20,40,70,110] can drift. Enhancements Discount (VaultID 2010, still labelled "2.5% cost
- * reduction to WS+" in the workbook) ships as a 9×5 ladder where the workbook had [5..45].
- * Guardians, Bot, Workshop, Global and Module Preset upgrades are not in the shipped Harmony
- * tree and remain workbook-only.
- *
- * Nothing in this package computes with these tables yet. The shipped vault in
- * `src/data/vault` still describes v28.
- *
- * v29 removed prerequisites: categories unlock once, then upgrades price per level.
+ * Maintain these tables with source evidence. The obsolete workbook generator has been retired
+ * because rerunning it would overwrite corrected values and upgrade ids.
  */
 
 export interface VaultV29Category {
@@ -35,7 +24,7 @@ export interface VaultV29Upgrade {
   readonly name: string
   /** The game's stable Vault upgrade id. */
   readonly vaultId?: number
-  /** Parent VaultID this upgrade depends on — it cannot be bought until the parent is maxed. */
+  /** Parent VaultID this upgrade depends on â€” it cannot be bought until the parent is maxed. */
   readonly dependsOn?: number
   /** Key cost per level, in order. Empty where the workbook gave none. */
   readonly levelCosts: readonly number[]

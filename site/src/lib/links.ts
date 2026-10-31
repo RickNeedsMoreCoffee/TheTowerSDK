@@ -40,7 +40,7 @@ export const LINKS = {
 export const SITE_ORIGIN = 'https://tmrxjd.github.io';
 
 export const PACKAGE_NAME = 'thetowersdk';
-export const INSTALL_CMD = 'npm install thetowersdk';
+export const INSTALL_CMD = `npm install thetowersdk@${sdkVersion} --save-exact`;
 
 /*
  * Read from the installed package rather than restated here.

@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { WORKSHOP_IMPORT_CATALOG } from '../../src/save/catalogs/indexes.data'
+import { readWorkshopFromSaveRoot } from '../../src/save'
 
 /**
  * Workshop upgrades, held to the game's own index order.
@@ -51,6 +52,34 @@ const ACCEPTED_NAME_DIFFERENCES = new Map<string, string>([
 const loose = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, '')
 
 describe('workshop upgrade indices', () => {
+  it('reads active and preset levels by canonical save indices across every category', () => {
+    const root: Record<string, unknown> = {}
+    const bases = { attack: 1000, defense: 2000, utility: 3000 }
+    for (const row of WORKSHOP_IMPORT_CATALOG) {
+      const values = (root[row.saveField] ??= []) as number[]
+      values[row.categoryIndex] = bases[row.category] + row.categoryIndex
+    }
+    root.presetUpgradeWorkshopLevel = [root.upgradeWorkshopLevel]
+    root.presetUpgradeWorkshopDefenseLevel = [root.upgradeWorkshopDefenseLevel]
+    root.presetUpgradeWorkshopUtilityLevel = [root.upgradeWorkshopUtilityLevel]
+    const result = readWorkshopFromSaveRoot(root)!
+    const publicKeys: Record<string, string> = {
+      'Attack Range': 'Range', 'Defense %': 'Defense Percent', 'Thorn Damage': 'Thorns',
+    }
+    for (const row of WORKSHOP_IMPORT_CATALOG) {
+      if (!row.targetKey) continue
+      const key = publicKeys[row.targetKey] ?? row.targetKey
+      expect(result.active.levels[key], `${row.category}[${row.categoryIndex}]`).toBe(bases[row.category] + row.categoryIndex)
+      expect(result.presets[0].levels[key]).toBe(bases[row.category] + row.categoryIndex)
+    }
+    expect(result.active.levels.Range).toBe(1004)
+    expect(result.active.levels['Defense Percent']).toBe(2002)
+    expect(result.active.levels.Thorns).toBe(2004)
+    for (const key of Object.keys(publicKeys)) expect(Object.hasOwn(result.active.levels, key)).toBe(false)
+    expect(result.active.levels['Death Defy']).toBe(2015)
+    expect(result.active.levels['Wall Health']).toBe(2016)
+    expect(result.active.levels['Wall Rebuild']).toBe(2017)
+  })
   it('reads the game categories', () => {
     expect(categories.map(([name]) => name)).toEqual(['Attack', 'Defense', 'Utility'])
   })

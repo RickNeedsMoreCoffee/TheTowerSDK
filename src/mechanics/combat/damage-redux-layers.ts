@@ -3,15 +3,14 @@
  *
  * ## Stack order (after raw enemy damage + perks)
  *
- * 1. Defense % — linear: `damage × (1 − stat/100)`, 98% hard cap
- * 2. Defense Absolute — subtractive: `max(0, damage − flat)`
- * 3. Chrono Field DR — multiplicative (lab 54 unlock + lab 55 scaling)
- * 4. Chain Thunder — CL+ accumulated damage scaling (`Enemy$$LightningPlusDamage`)
- * 5. Flame Bot — multiplicative (`flame bot damage reduction`)
- * 6. Primordial Collapse — multiplicative (enemies inside Black Hole)
- * 7. Negative Mass Projector — multiplicative (orb-hit stack, 50% cap)
+ * Multiplicative reductions (Chain Thunder, Chrono Field, Flame Bot, NMP,
+ * Primordial Collapse and Defense %) apply to raw damage BEFORE flat defense.
+ * Retained v29.1.3 CalculateDamageReduction source SHA256:
+ * 90afc49d438d77df474a6f96e1ba82cbda696a5d611eb3afa3d851c18e47bc29.
+ * Player-facing results clamp the final raw-minus-flat amount to zero.
  *
- * Multiplicative layers commute; order follows run blocked-stat sequence.
+ * Multiplicative layers commute mathematically. Native blocked statistics
+ * independently reference raw incoming damage; sequential UI steps differ.
  */
 /* ── file map ─────────────────────────────────────────────────────────────────
  * exports    CHRONO_FIELD_REDUCTION_LAB_BASE_PCT, CHRONO_FIELD_REDUCTION_LAB_PER_LEVEL_PCT, NMP_MAX_DAMAGE_REDUCTION_PCT, FLAME_BOT_BASE_REDUCTION_PCT, FLAME_BOT_REDUCTION_PER_LEVEL_PCT, damageTakenMultiplierFromReductionPct, damageTakenMultiplierFromReductionFraction, computeChronoFieldReductionPct (+14 more)
@@ -93,7 +92,9 @@ export function computeChainThunderMaxReductionPct(ctLevel: number): number {
 }
 
 /**
- * Chain Thunder reduction fraction from accumulated CL+ damage on the enemy.
+ * Chain Thunder reduction fraction from caller-supplied eligible CL damage.
+ * This helper does not restrict accumulation to Smite. The convenience estimator
+ * below uses Smite hits only; callers must establish the eligible damage channel.
  * `min((accumulatedClDamage / enemyHealthMax) × 5/3, chainThunderLabMaxFraction)`.
  */
 export function computeChainThunderReductionFractionFromAccumulated(

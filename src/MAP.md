@@ -54,12 +54,12 @@ The package itself — everything that ships, and nothing that does not.
 | [`src/mechanics/battle-conditions`](mechanics/battle-conditions/MAP.md) | 6 | Battle conditions, their counters, and the tournament heat index. |
 | [`src/mechanics/bots`](mechanics/bots/MAP.md) | 20 | The three bots: their upgrades, movement, hit behaviour, and medal planning. |
 | [`src/mechanics/cards`](mechanics/cards/MAP.md) | 3 | Card costs and the lookup from a card to the effect it applies. |
-| [`src/mechanics/combat`](mechanics/combat/MAP.md) | 28 | What the tower does to enemies — damage, its multipliers, and every on-hit effect. |
+| [`src/mechanics/combat`](mechanics/combat/MAP.md) | 29 | What the tower does to enemies — damage, its multipliers, and every on-hit effect. |
 | [`src/mechanics/effective-paths`](mechanics/effective-paths/MAP.md) | 49 | Effective Paths: the cheapest route to a damage, economy or survivability target. |
 | [`src/mechanics/effective-paths/common`](mechanics/effective-paths/common/MAP.md) | 2 | The shapes every path shares — a step, an exclusion, the lab and workshop discounts it prices with. |
 | [`src/mechanics/effective-paths/edamage`](mechanics/effective-paths/edamage/MAP.md) | 2 | The types the damage paths export, re-exported by the folder above. |
 | [`src/mechanics/effective-paths/eecon`](mechanics/effective-paths/eecon/MAP.md) | 2 | The types the economy paths export, re-exported by the folder above. |
-| [`src/mechanics/enemies`](mechanics/enemies/MAP.md) | 20 | Enemy stats, types, resistances, elite spawns and drops. |
+| [`src/mechanics/enemies`](mechanics/enemies/MAP.md) | 22 | Enemy stats, types, resistances, elite spawns and drops. |
 | [`src/mechanics/ep-controls`](mechanics/ep-controls/MAP.md) | 7 | Which Effective Paths controls exist, and how much of the surface is wired. |
 | [`src/mechanics/ep-graph`](mechanics/ep-graph/MAP.md) | 8 | The Effective Paths workbook as a graph of cells and their dependencies. |
 | [`src/mechanics/guardians`](mechanics/guardians/MAP.md) | 3 | Guardian damage and the chips that shape it. |
@@ -68,8 +68,9 @@ The package itself — everything that ships, and nothing that does not.
 | [`src/mechanics/perks`](mechanics/perks/MAP.md) | 3 | What a perk is worth. |
 | [`src/mechanics/planning`](mechanics/planning/MAP.md) | 2 | Deciding what to buy next, rather than what something does. |
 | [`src/mechanics/primitives`](mechanics/primitives/MAP.md) | 6 | The arithmetic and fixed values every other mechanic is built on. |
-| [`src/mechanics/resource-drops`](mechanics/resource-drops/MAP.md) | 19 | Coin and cell income: where it comes from and how it is simulated. |
+| [`src/mechanics/resource-drops`](mechanics/resource-drops/MAP.md) | 20 | Coin and cell income: where it comes from and how it is simulated. |
 | [`src/mechanics/uptime`](mechanics/uptime/MAP.md) | 4 | How long a thing is active, and how often it comes back. |
+| [`src/mechanics/vault`](mechanics/vault/MAP.md) | 4 | Source-qualified v29 Power Vault effect fractions, distinct from legacy identities and costs. |
 | [`src/mechanics/waves`](mechanics/waves/MAP.md) | 20 | Wave scaling and pacing — enemy counts, spawn rates and skips. |
 | [`src/mechanics/waves/reference`](mechanics/waves/reference/MAP.md) | 5 | Earlier public wave formulas, kept as the reference the current ones are checked against. |
 | [`src/mechanics/workshop`](mechanics/workshop/MAP.md) | 11 | Workshop upgrades: their stats, costs and the tables that describe them. |
@@ -83,6 +84,7 @@ The package itself — everything that ships, and nothing that does not.
 | [`src/save/cards`](save/cards/MAP.md) | 3 | What a save says about cards. |
 | [`src/save/catalogs`](save/catalogs/MAP.md) | 11 | The index maps that turn a save’s numbers into named things. |
 | [`src/save/catalogs/vault`](save/catalogs/vault/MAP.md) | 4 | Which save slot each vault node reads, the corrections to that order, and how a mapping is chosen. |
+| [`src/save/current-run`](save/current-run/MAP.md) | 3 | Saved current-run upgrade arrays and position, distinct from purchased workshop. |
 | [`src/save/dissonance`](save/dissonance/MAP.md) | 3 | What a save says about dissonance. |
 | [`src/save/effective-paths`](save/effective-paths/MAP.md) | 4 | Effective Paths inputs recovered from a save. |
 | [`src/save/guardians`](save/guardians/MAP.md) | 3 | What a save says about guardians. |
@@ -92,8 +94,10 @@ The package itself — everything that ships, and nothing that does not.
 | [`src/save/lifetime`](save/lifetime/MAP.md) | 3 | What a save says about lifetime. |
 | [`src/save/modules`](save/modules/MAP.md) | 7 | Module effects as stored, decoded and displayed. |
 | [`src/save/perks`](save/perks/MAP.md) | 3 | What a save says about perks. |
+| [`src/save/purchases`](save/purchases/MAP.md) | 3 | Permanent purchase ownership explicitly recorded in a save. |
 | [`src/save/relics`](save/relics/MAP.md) | 3 | What a save says about relics. |
 | [`src/save/runs`](save/runs/MAP.md) | 3 | The fields a run records, and how their text normalises. |
+| [`src/save/runtime-controls`](save/runtime-controls/MAP.md) | 4 | Saved gameplay selections and ordered life-saving effect identities. |
 | [`src/save/themes`](save/themes/MAP.md) | 2 | What a save says about themes. |
 | [`src/save/ultimate-weapons`](save/ultimate-weapons/MAP.md) | 3 | What a save says about ultimate weapons. |
 | [`src/save/vault`](save/vault/MAP.md) | 4 | What a save says about vault. |

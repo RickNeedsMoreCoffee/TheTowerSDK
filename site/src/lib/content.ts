@@ -1,3 +1,5 @@
+import { INSTALL_CMD } from './links';
+
 /**
  * Whether the governance system appears on the site.
  *
@@ -643,7 +645,7 @@ export const mcpJson = `{
   }
 }`;
 
-export const installSnippet = `npm install thetowersdk`;
+export const installSnippet = INSTALL_CMD;
 
 export const dataSnippet = `import { LAB_CATALOG } from 'thetowersdk/data'
 

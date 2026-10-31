@@ -1,6 +1,6 @@
 /**
- * Damage Reduction calculator pipeline — game layers from `CalculateDamageReductionResult`
- * plus site module layers (NMP, PC, Chain Thunder).
+ * Configured damage mitigation. Multiplicative reductions precede flat defense.
+ * Steps are a sequential calculator breakdown, not the game's blocked counters.
  */
 /* ── file map ─────────────────────────────────────────────────────────────────
  * exports    applyDamageReduxLayerStack, effectiveRelativeDefenseReductionPct
@@ -22,7 +22,12 @@ function multFromReductionPct(pct: number): number {
 
 export { effectiveRelativeDefenseReductionPct } from './damage-reduction'
 
-/** Apply full reduction stack; returns final damage and ordered layer steps. */
+/** Apply configured reductions; steps partition this calculator's damage delta.
+ * Source: retained v29.1.3 CalculateDamageReduction native SHA256
+ * 90afc49d438d77df474a6f96e1ba82cbda696a5d611eb3afa3d851c18e47bc29.
+ * Native blocked statistics separately reference incoming damage and can overlap;
+ * this sequential display is not a reconstruction of those counters.
+ */
 export function applyDamageReduxLayerStack(
   rawDamage: number,
   config: DamageReduxLayerConfig,
@@ -30,8 +35,20 @@ export function applyDamageReduxLayerStack(
   const steps: DamageReduxLayerStep[] = []
   let working = rawDamage
 
-  // Matches `computeDamageReductionResult` + run blocked-stat order:
-  // Defense % → Defense Absolute → chrono → CT → flame → PC → NMP.
+  const moduleLayers: Array<{ key: DamageReduxLayerKey; pct: number; capAt50?: boolean }> = [
+    { key: 'chainThunder', pct: config.useChainThunder ? config.chainThunderReductionPct : 0 },
+    { key: 'chrono', pct: config.useChrono ? config.chronoReductionPct : 0 },
+    { key: 'flameBot', pct: config.useFlameBot ? config.flameBotReductionPct : 0 },
+    { key: 'nmp', pct: config.useNmp ? config.nmpTotalReductionPct : 0, capAt50: true },
+    { key: 'pc', pct: config.usePc ? config.pcReductionPct : 0 },
+  ]
+  for (const layer of moduleLayers) {
+    if (layer.pct <= 0) continue
+    const reductionPct = layer.capAt50 ? Math.min(layer.pct, 50) : layer.pct
+    const prev = working
+    working *= multFromReductionPct(reductionPct)
+    steps.push({ key: layer.key, reductionPct, value: working, prev, reduced: prev - working })
+  }
   if (config.useDefense && config.defenseRel > 0) {
     const prev = working
     working = applyRelativeDefense(working, config.defenseRel)
@@ -50,28 +67,6 @@ export function applyDamageReduxLayerStack(
     steps.push({
       key: 'defenseAbsolute',
       reductionPct: prev > 0 ? ((prev - working) / prev) * 100 : 0,
-      value: working,
-      prev,
-      reduced: prev - working,
-    })
-  }
-
-  const moduleLayers: Array<{ key: DamageReduxLayerKey; pct: number; capAt50?: boolean }> = [
-    { key: 'chrono', pct: config.useChrono ? config.chronoReductionPct : 0 },
-    { key: 'chainThunder', pct: config.useChainThunder ? config.chainThunderReductionPct : 0 },
-    { key: 'flameBot', pct: config.useFlameBot ? config.flameBotReductionPct : 0 },
-    { key: 'pc', pct: config.usePc ? config.pcReductionPct : 0 },
-    { key: 'nmp', pct: config.useNmp ? config.nmpTotalReductionPct : 0, capAt50: true },
-  ]
-
-  for (const layer of moduleLayers) {
-    if (layer.pct <= 0) continue
-    const reductionPct = layer.capAt50 ? Math.min(layer.pct, 50) : layer.pct
-    const prev = working
-    working *= multFromReductionPct(reductionPct)
-    steps.push({
-      key: layer.key,
-      reductionPct,
       value: working,
       prev,
       reduced: prev - working,

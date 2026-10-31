@@ -14,12 +14,7 @@ docs/mechanics-map/
 # of messages of Discord JSON. What ships is the DERIVED dataset generated from it.
 data/patch-notes/raw-messages.json
 
-# Artwork catalogues.
-#
-# `assets:manifest` and `assets:game` read a directory of the game's art and write a list of its
-# filenames. Useful against a private copy; not ours to distribute. A catalogue naming every
-# sprite in the game is derived from the game whoever typed it, so it stays out of the repo and
-# out of the package — `src/assets/index.ts` ships the naming RULE instead.
+# Keep private artwork filename indexes out of published source.
 src/assets/*.generated.ts
 
 # WASM build artifacts: the Javy compiler is fetched on demand, and the module is built from dist.

@@ -6,11 +6,12 @@ What the tower does to enemies — damage, its multipliers, and every on-hit eff
 
 | File | Purpose | Exports |
 |---|---|---|
+| `berserker.ts` | — | BERSERKER_VAULT_KILL_CHARGE_FRACTION, berserkerKillChargeBonus |
 | `bonuses.ts` | Small compounding bonuses. | goldenComboBonus, mineChargeMultiplier |
-| `chrono-field.ts` | — | CHRONO_KNOT_1, CHRONO_KNOT_2, CHRONO_KNOT_3, CHRONO_SLOW_COEFF (+6 more) |
+| `chrono-field.ts` | — | CHRONO_KNOT_1, CHRONO_KNOT_2, CHRONO_KNOT_3, CHRONO_SLOW_COEFF (+7 more) |
 | `crowd-control.ts` | — | tickCcTimers, isStunned, isPoisoned, isSlowedByShockwave (+7 more) |
 | `damage-reduction.ts` | Damage reduction from relative/absolute defense and multiplicative mitigation layers. | applyDamageReductionStats, DEFENSE_PERCENT_MAX, applyRelativeDefense, effectiveRelativeDefenseReductionPct (+2 more) |
-| `damage-redux-calculator.ts` | Damage Reduction calculator pipeline — game layers from `CalculateDamageReductionResult` plus site module layers (NMP, PC, Chain Thunder). | applyDamageReduxLayerStack, effectiveRelativeDefenseReductionPct |
+| `damage-redux-calculator.ts` | Configured damage mitigation. | applyDamageReduxLayerStack, effectiveRelativeDefenseReductionPct |
 | `damage-redux-constants.ts` | — | SMITE_DAMAGE_BY_CL_PLUS_LEVEL, CHAIN_THUNDER_ACCUMULATED_HP_SCALE, CHAIN_THUNDER_LAB_MAX_PER_LEVEL |
 | `damage-redux-layers.ts` | Damage-reduction layer formulas — run-report / combat parity. | CHRONO_FIELD_REDUCTION_LAB_BASE_PCT, CHRONO_FIELD_REDUCTION_LAB_PER_LEVEL_PCT, NMP_MAX_DAMAGE_REDUCTION_PCT, FLAME_BOT_BASE_REDUCTION_PCT (+18 more) |
 | `damage-redux-wave-stats.ts` | — | getDamageReduxBasicWaveStats |
@@ -27,7 +28,7 @@ What the tower does to enemies — damage, its multipliers, and every on-hit eff
 | `rend-armor.ts` | Rend Armor: | REND_WORKSHOP_SLOT_PRIMARY, REND_WORKSHOP_SLOT_SECONDARY, REND_MODULE_SLOT, rendArmorMultiplier (+1 more) |
 | `shockwave.ts` | — | SHOCKWAVE_MIN_FREQUENCY_SECONDS, SHOCKWAVE_ENHANCEMENT_BASE, SHOCKWAVE_ENHANCEMENT_STEP, SHOCKWAVE_MODULE_STAT_INDEX (+6 more) |
 | `thorns-calculator.ts` | Thorns: | ThornsCalculatorInput, normalizeThornsInput, buildThornsWallChart, buildThornsBaseChart |
-| `thorns.ts` | — | THORN_DAMAGE_SCALE, THORN_LAB_INDEX, THORN_MODULE_BENEFIT_SLOT, thornDamageOnHit (+1 more) |
+| `thorns.ts` | — | towerThornsFraction, THORN_DAMAGE_SCALE, THORN_LAB_INDEX, THORN_MODULE_BENEFIT_SLOT (+2 more) |
 | `tower-fire.ts` | Tower fire: | towerFireInRange, towerFireRapidFireEligible |
 | `tower-range.ts` | Tower range stat — `CalculateMaxRangeAndSetRadius`. | rangeSoftCap, computeMaxDistance, getOutOfRoundMaxDistance, RANGE_INDICES (+1 more) |
 | `types.ts` | The types `mechanics/combat/` exports, in one place — so a neighbouring module finds the shape it needs here instead of declaring its own under a second name. | EnemyCcTimers, DamageReductionStatDelta, DamageReductionStatAccumulator, DamageReductionInput (+49 more) |

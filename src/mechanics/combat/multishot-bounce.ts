@@ -54,7 +54,9 @@ import type { BlackHoleBounceRangeInput, BounceRangeLineInput, FindNextBounceTar
 
 /**
  * Enemy type index (0–12) → priority bucket for target priority bucket.
- * Index 7 (Ray) → bucket 8 per live enum probe.
+ * Types 6–9 (Vampire, Scatter parent/child and Ray) share bucket 8.
+ * Current identities are recorded in save/killed-by/read.ts; bucket values alone
+ * must not be used to infer an enemy-type name.
  */
 export const ENEMY_TYPE_TO_PRIORITY_BUCKET: readonly number[] = [
   1, 2, 3, 5, 4, 7, 8, 8, 8, 8, 9, 9, 9,

@@ -6,12 +6,21 @@
  * different, lower-level thorns calculator whose inputs -- an enemy factor, a thorn multiplier --
  * are values a player has no way to read off their screen.
  *
+ * The Plasma Cannon chart columns preserve a legacy estimator: they multiply each
+ * thorn hit by (1 + the PC coefficient). They do not simulate Plasma Cannon's
+ * one-time removal of a share of the boss's maximum health. A battle model must
+ * apply that separate event once, retaining maximum health for later thorns.
+ * Do not interpret these chart hit counts as an exact PC-plus-thorns battle.
+ *
  * What a player does know is on this input: base thorns, the tier, plasma cannon and its mastery,
  * the two BC reduction labs, whether Sharp Fortitude is taken, and the wave a tournament heat
  * reading came from. Everything else is derived.
  *
- * Thorn damage is a share of the ENEMY'S contact damage, not of the tower's damage, which is the
- * part most tools get backwards.
+ * Ordinary thorn damage is a share of the enemy's maximum health, not its attack damage.
+ * The retained v29.1.3 evidence establishes the maximum-health basis before applying
+ * the thorn percentage; fleet enemies have a separate current-health branch.
+ * This establishes the damage basis; equality-at-death requires independent native
+ * branch evidence and must not be inferred from a reconstructed comparison alone.
  */
 /* ── file map ─────────────────────────────────────────────────────────────────
  * exports    ThornsCalculatorInput, normalizeThornsInput, buildThornsWallChart, buildThornsBaseChart

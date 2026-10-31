@@ -1,13 +1,8 @@
 /**
  * Working with The Tower's artwork — which this package does not ship.
  *
- * The images belong to TechTree Games. This project has no permission to redistribute them, and
- * a catalogue of their filenames is close enough to the same thing that it is not shipped either:
- * a list naming every sprite in the game is derived from the game, whoever typed it.
- *
- * What ships is the part that is genuinely ours: the **naming rule**, so a tool can find a file
- * in a directory of artwork you supply yourself. Lay the files
- * out as described below, and every path resolves.
+ * These helpers build paths within a directory of artwork you supply. Artwork belongs to
+ * TechTree Games; the SDK distributes path conventions, with no images or filename index.
  *
  * ```ts
  * import { gameAssetPath, towerAssetUrl } from 'thetowersdk/assets'
@@ -51,12 +46,7 @@ export const ASSET_SIZES = ['sm', 'md', 'lg'] as const
 
 export type AssetSize = (typeof ASSET_SIZES)[number]
 
-/**
- * The domains the layout expects, one directory each.
- *
- * These are the game's own categories — the same ones the catalogs in `thetowersdk/data` are
- * organised by — rather than anything read out of the game files.
- */
+/** Supported artwork directories, grouped by the same domains as the game catalogs. */
 export const ASSET_DOMAINS = [
   'backgrounds',
   'bots',

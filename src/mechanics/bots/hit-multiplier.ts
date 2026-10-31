@@ -80,10 +80,12 @@ export function enemyHitMultiplier(input: EnemyHitMultiplierInput): number {
 /**
  * Bot-on-bot amplification, averaged over the fraction of the time it applies.
  *
- * There is no second multiplier. This used to take the Bot Bot's `Maximum Power` Bot+ value
- * and fold it in as `bonus * maximumPower`, which inflated every amplified stat — the Bot+
- * tables reach `plusBenefit`, and `plusBenefit` is not read by any of the three effect
- * methods.
+ * Only Bot Bot's base `Bonus` belongs in this ordinary core-effect averager.
+ * `Maximum Power` separately boosts other Bot+ abilities, including Echoing Shot
+ * and Wildfire; it must not multiply ordinary Amplify Bot's base Bonus here.
+ * The Bot+ descriptions establish that distinction, and the inspected public
+ * reference's bot composition corroborates it; this is not an original-APK
+ * parity claim. Per-target Bot+ state and timing require their own resolution.
  */
 export function botBotBoostedMultiplier(
   botBotBonus: number,

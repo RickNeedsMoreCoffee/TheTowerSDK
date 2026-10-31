@@ -38,6 +38,8 @@ export interface GuardianSkinSaveRow {
 
 export interface GuardiansSaveExtract {
   guardianUnlocked: boolean
+  /** Official export membership flag. Missing/unreadable is unknown, not false. */
+  inGuild: boolean | null
   chips: GuardianChipSaveRow[]
   equippedChips: GuardianEquippedChipRow[]
   skins: GuardianSkinSaveRow[]

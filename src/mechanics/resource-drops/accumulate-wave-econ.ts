@@ -34,7 +34,7 @@ export const NEUTRAL_COIN_SIMULATION_DEFAULTS: Omit<
   dwCoinLabLevel: 0,
   slCoinLabLevel: 0,
   coinsCardLevel: 1,
-  coinsCardMastery: 0,
+  coinsCardMastery: -1,
   themeCoinBonusPct: 0,
   relicCoinBonusPct: 0,
   iapToggles: { hasStarterPack: false, hasEpicPack: false, hasDisableAds: false },

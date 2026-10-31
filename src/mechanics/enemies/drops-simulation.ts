@@ -95,6 +95,12 @@ export function fetchUpgradeAtLevel(level: number): FetchUpgrade {
 
 /** Fetch find-chance proc model — each proc rolls one loot table entry. */
 export function simulateFetchDrops(input: EnemyDropsSimulationInput): FetchResourceBreakdown {
+  // A zero upgrade level is still an active base Fetch; equipment is independent.
+  if (input.fetchActive === false) return {
+    expectedProcs: 0, gems: 0, medals: 0, rerollShards: 0, moduleShards: 0,
+    cannonShards: 0, armorShards: 0, generatorShards: 0, coreShards: 0,
+    commonModules: 0, rareModules: 0,
+  }
   const ctx = buildWaveContext(input)
   const labs = getEnemyDropsLabBenefits(input)
 

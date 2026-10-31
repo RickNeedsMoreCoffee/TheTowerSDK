@@ -50,7 +50,7 @@ function spawnYieldForWaveRow(
   return resolveWaveSpawnYieldFromAccount({
     tier: input.tier,
     wave,
-    enemyBalanceMastery: input.enemyBalanceMasteryLevel,
+    enemyBalanceMastery: input.enemyBalanceActive === false ? -1 : input.enemyBalanceMasteryLevel,
     waveAcceleratorMastery: input.waveAcceleratorMasteryLevel,
     useSpawnGates: input.useSpawnGates === true,
     useSpawnQuantum: input.useSpawnQuantum,
@@ -94,7 +94,7 @@ export function forEachWaveEconRow(
     ctx.targetWave,
     Math.max(1, Math.floor(Number(options.maxRows ?? ctx.targetWave) || ctx.targetWave)),
   )
-  const coinWeightPerKill = ordinaryCoinWeightAtTier(input.tier)
+  const coinWeightPerKill = ordinaryCoinWeightAtTier(input.tier, input)
   let prevWaveCells = 0
   let prevPlayedBaseCells = 0
 

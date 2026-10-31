@@ -77,9 +77,11 @@ function cardLevelMulti(cardId: string, gameLevel: number): number {
 
 function cardMasteryMulti(cardId: string, gameLevel: number, masteryLevel: number): number {
   const card = findCard(cardId)
-  if (!card?.masteryValues?.length || gameLevel < 7) return 1
-  const idx = clamp(Math.floor(masteryLevel), 0, card.masteryValues.length - 1)
-  const raw = card.masteryValues[idx]
+  if (!Number.isInteger(masteryLevel) || masteryLevel < -1
+    || masteryLevel >= (card?.masteryValues?.length ?? 0))
+    throw new RangeError('Coins mastery level must be -1 (unowned) or a valid research index')
+  if (!card?.masteryValues?.length || gameLevel < 7 || masteryLevel < 0) return 1
+  const raw = card.masteryValues[masteryLevel]
   return typeof raw === 'number' ? raw : 1
 }
 
@@ -158,10 +160,19 @@ function uwStoneStatMult(weaponName: string, statName: string, level: number): n
   return Math.max(1, last?.baseValue ?? 1)
 }
 
-export function computeGoldenTowerCoinMult(stoneMultiplierLevel: number, gtBonusLabLevel: number): number {
+/** The GT perk multiplies stone+lab, then the module bonus is added.
+ * Matches goldenTowerBonus; measured community examples:
+ * https://www.reddit.com/r/TheTowerGame/comments/1vbx04b/gt_perk_bug/
+ */
+export function computeGoldenTowerCoinMult(stoneMultiplierLevel: number, gtBonusLabLevel: number,
+  moduleBonus = 0, perkMultiplier = 1): number {
+  if (!Number.isFinite(moduleBonus) || moduleBonus < 0 || !Number.isFinite(perkMultiplier) || perkMultiplier < 1)
+    throw new Error('GT_COIN_MODULE_AND_PERK_COEFFICIENT_INVALID')
   const stoneMult = uwStoneStatMult('Golden Tower', 'Multiplier', stoneMultiplierLevel)
   const labBonus = computeLabCoinMultiplier(RESOURCE_DROPS_COIN_LAB_SLUGS.gtBonus, gtBonusLabLevel)
-  return stoneMult + labBonus
+  const result = (stoneMult + labBonus) * perkMultiplier + moduleBonus
+  if (!Number.isFinite(result)) throw new Error('GT_COIN_COEFFICIENT_OVERFLOW')
+  return result
 }
 
 export function computePackCoinMult(toggles: ResourceDropsCoinIapToggles): number {
@@ -186,14 +197,6 @@ function parseBotStatMultiplier(botName: string, statName: string, level: number
   return parsed > 0 ? parsed : 1
 }
 
-function parseBotStatSeconds(botName: string, statName: string, level: number): number {
-  const bot = BOT_UPGRADES_DATA.find(entry => entry.name === botName || entry.label === botName)
-  if (!bot) return 0
-  const stat = bot.stats[statName as keyof typeof bot.stats]
-  if (!stat) return 0
-  return botStatValueAt(stat, level)
-}
-
 function resolveUwUptimeRatios(
   uptime: UptimeCoreState | null,
 ): Pick<ResourceDropsCoinMultiplierBreakdown, 'gtUptimeRatio' | 'bhUptimeRatio' | 'dwUptimeRatio' | 'slUptimeRatio' | 'gbUptimeRatio'> {
@@ -214,9 +217,8 @@ function resolveUwUptimeRatios(
   const bhUptimeRatio = computeUptimeRatio(durations.bh, cds.bh)
   const dwUptimeRatio = computeUptimeRatio(durations.dw, cds.dw)
   const slUptimeRatio = clamp(durations.sl / 100, 0, 1)
-  const gbCd = parseBotStatSeconds('Golden Bot', 'Cooldown', uptime.gbCdLevel ?? 0)
-  const gbDur = parseBotStatSeconds('Golden Bot', 'Duration', uptime.gbDurLevel ?? 0)
-  const gbUptimeRatio = computeUptimeRatio(gbDur, gbCd)
+  // Use the same lab-adjusted timing as the uptime calculator, rather than base bot stats.
+  const gbUptimeRatio = computeUptimeRatio(durations.gb, cds.gb)
 
   return {
     gtUptimeRatio,
@@ -272,10 +274,18 @@ export function expectedTimedCoinKillMult(
 export function buildResourceDropsCoinMultipliers(
   input: ResourceDropsCoinSimulationInput,
 ): ResourceDropsCoinMultiplierBreakdown {
+  const dissonanceCoinMultiplier = input.dissonanceCoinMultiplier ?? 1
+  const generatorCoinMultiplier = input.generatorCoinMultiplier ?? 1
+  if (!Number.isFinite(generatorCoinMultiplier) || generatorCoinMultiplier < 1) {
+    throw new RangeError('Generator coin multiplier must be finite and at least 1')
+  }
+  if (!Number.isFinite(dissonanceCoinMultiplier) || dissonanceCoinMultiplier < 1) {
+    throw new RangeError('Dissonance coin multiplier must be finite and at least 1')
+  }
   const tier = clamp(Math.floor(input.tier), 1, MAX_CAMPAIGN_TIER)
   const tierCoinMult = empiricalTierCoinMultiplier(tier)
   const coinBonusEnhancement = coinBonusEnhancementMult(input.coinBonusEnhancementLevel)
-  const coinsCardMult = cardLevelMulti('coins', input.coinsCardLevel)
+  const coinsCardMult = input.coinsCardActive === false ? 1 : cardLevelMulti('coins', input.coinsCardLevel)
     * cardMasteryMulti('coins', input.coinsCardLevel, input.coinsCardMastery)
   const themeMult = themePassiveCoinMult(input)
   const relicMult = 1 + Math.max(0, Number(input.relicCoinBonusPct) || 0) / 100
@@ -289,6 +299,8 @@ export function buildResourceDropsCoinMultipliers(
   const vaultMult = vaultCoinskillMult(input.vaultCoinskillLevel)
 
   const globalMult = tierCoinMult
+    * dissonanceCoinMultiplier
+    * generatorCoinMultiplier
     * coinBonusEnhancement
     * coinsCardMult
     * themeMult
@@ -305,14 +317,15 @@ export function buildResourceDropsCoinMultipliers(
   const cpwWorkshop = readWorkshopUtilityValue(COINS_WAVE_WORKSHOP_KEY, input.coinsWaveWorkshopLevel)
   const coinsPerWaveMult = cpwWorkshop * globalMult * coinsWaveLabMult
 
-  const skipChance = cardLevelPercent('ws', input.waveSkipCardLevel)
+  const skipChance = input.waveSkipActive === false ? 0 : cardLevelPercent('ws', input.waveSkipCardLevel)
   const waveSkipMult = waveSkipResourceMultiplier(skipChance, buildWaveContext(input).waveSkipExpectedSkipsPerProc)
   const introSprintCoinFraction = 1 - introSprintZeroCoinFraction(
     input.introSprintZeroCoinWaveCap,
     input.targetWave,
   )
 
-  const gtCoinMult = computeGoldenTowerCoinMult(input.uwLevels.gtMultiplierLevel, input.gtBonusLabLevel)
+  const gtCoinMult = computeGoldenTowerCoinMult(input.uwLevels.gtMultiplierLevel, input.gtBonusLabLevel,
+    input.goldenTowerBonusSubstat ?? 0)
   const bhCoinMult = computeLabCoinMultiplier(RESOURCE_DROPS_COIN_LAB_SLUGS.bhCoin, input.bhCoinLabLevel)
   const dwCoinMult = computeLabCoinMultiplier(RESOURCE_DROPS_COIN_LAB_SLUGS.dwCoin, input.dwCoinLabLevel)
   const slCoinMult = computeLabCoinMultiplier(RESOURCE_DROPS_COIN_LAB_SLUGS.slCoin, input.slCoinLabLevel)
@@ -379,7 +392,7 @@ export function spawnYieldForWave(
   return resolveWaveSpawnYieldFromAccount({
     tier: input.tier,
     wave,
-    enemyBalanceMastery: input.enemyBalanceMasteryLevel,
+    enemyBalanceMastery: input.enemyBalanceActive === false ? -1 : input.enemyBalanceMasteryLevel,
     waveAcceleratorMastery: input.waveAcceleratorMasteryLevel,
     useSpawnGates: input.useSpawnGates === true,
     useSpawnQuantum: input.useSpawnQuantum,

@@ -10,7 +10,7 @@
 		askDemoSnippet,
 		SHOW_GOVERNANCE
 	} from '$lib/content';
-	import { LINKS } from '$lib/links';
+	import { INSTALL_CMD, LINKS } from '$lib/links';
 	import { asset, href } from '$lib/paths';
 	import CodeBlock from '$lib/ui/CodeBlock.svelte';
 	import GithubButton from '$lib/ui/GithubButton.svelte';
@@ -93,7 +93,7 @@
 			role: 'Required',
 			action: 'Add to your project',
 			body: 'Game catalogs, save reading, formulas, charts, and wiki ingestion for Node and browsers. Catalogs and formulas run locally; account imports accept only official game JSON exports. Wiki integrations use network access.',
-			command: 'npm install thetowersdk',
+			command: INSTALL_CMD,
 			docsHref: href('/docs/install/'),
 			docsLabel: 'Install Docs'
 		},

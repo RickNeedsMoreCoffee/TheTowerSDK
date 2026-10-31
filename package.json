@@ -1,7 +1,7 @@
 {
   "name": "thetowersdk",
-  "version": "0.12.0",
-  "description": "Game data and save-file reading for The Tower — build your own calculators and tools.",
+  "version": "0.13.0",
+  "description": "Game data and save-file reading for The Tower â€” build your own calculators and tools.",
   "license": "MIT",
   "author": "TmRxJD (https://github.com/TmRxJD)",
   "homepage": "https://tmrxjd.github.io/TheTowerSDK/",
@@ -71,17 +71,13 @@
     "docs:snippets": "node scripts/build-doc-snippets.mjs",
     "docs:seed": "npm run docs:snippets && npm run wiki:build",
     "docs:check": "node scripts/build-doc-snippets.mjs --check && npm run wiki:check && node scripts/check-readme-links.mjs && node scripts/build-patch-notes.mjs --check",
-    "//assets": "Local only. These read a directory of the game's artwork and emit a catalogue of its filenames — useful for working against a private copy, and NOT part of what this package ships. Their output is gitignored; see src/assets/index.ts.",
-    "assets:manifest": "node scripts/build-asset-manifest.mjs",
-    "assets:game": "node scripts/build-game-asset-manifest.mjs",
     "patch-notes:ingest": "node scripts/ingest-patch-notes.mjs",
     "patch-notes:build": "node scripts/build-patch-notes.mjs",
     "wasm:build": "node wasm/build.mjs",
     "wasm:check": "node wasm/build.mjs --check",
     "wasm:call": "node wasm/run.mjs",
     "lint:package": "node scripts/audit-package-contents.mjs",
-    "epaths:refresh-reference": "node scripts/refresh-effective-paths-reference.mjs",
-    "vault:v29": "node scripts/build-vault-v29.mjs --write"
+    "epaths:refresh-reference": "node scripts/refresh-effective-paths-reference.mjs"
   },
   "exports": {
     ".": {

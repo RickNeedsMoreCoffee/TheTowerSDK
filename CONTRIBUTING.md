@@ -1,12 +1,12 @@
 # Contributing
 
-Contributions are welcome — this is meant to be the community's SDK, not one person's.
+Contributions are welcome â€” this is meant to be the community's SDK, not one person's.
 
 ## Getting set up
 
 ```bash
 npm install
-npm run verify   # lint, conventions, types, build, tests — what CI runs
+npm run verify   # lint, conventions, types, build, tests â€” what CI runs
 ```
 
 Or individually: `npm run lint`, `npm run lint:conventions`, `npm run type-check`,
@@ -14,7 +14,7 @@ Or individually: `npm run lint`, `npm run lint:conventions`, `npm run type-check
 
 Node 20+. The only runtime dependency is `zod`.
 
-There's also an MCP server (`npm run mcp`) if you work with an AI agent — see
+There's also an MCP server (`npm run mcp`) if you work with an AI agent â€” see
 [mcp/README.md](mcp/README.md) and [AGENTS.md](AGENTS.md).
 
 ## What's most useful
@@ -23,7 +23,7 @@ There's also an MCP server (`npm run mcp`) if you work with an AI agent — see
 work out what a field means, an extractor is usually a small addition. See any file in `src/save/`
 for the shape.
 
-**Data corrections.** Include evidence — a save file, or a screenshot of the value in game. A number
+**Data corrections.** Include evidence â€” a save file, or a screenshot of the value in game. A number
 without evidence is hard to act on.
 
 **Examples.** If you built something with this, an example others can learn from is valuable.
@@ -35,27 +35,26 @@ anything you consider private first.
 
 ```
 src/
-  data/         game tables — costs, levels, effects, catalogs
+  data/         game tables â€” costs, levels, effects, catalogs
   save/         reading a save file
     catalogs/   save indices -> named entities
   node/         the save decoder (needs Node)
   formatting/   number formatting matching the game's display
-  mechanics/    formulas (approximate — see README)
-  internal/     not part of the public API
+  mechanics/    formulas (approximate â€” see README)
 ```
 
-Public API is whatever `src/data/index.ts`, `src/save/index.ts`, `src/node/index.ts` and
-`src/formatting/index.ts` export. If you add a module, export it from the matching barrel —
+Public entry points are declared in `package.json`; each domain exports its API through its
+`index.ts` barrel. If you add a module, export it from the matching barrel â€”
 otherwise nobody can import it.
 
 There is no `src/internal/`. A module belongs to a domain and is exported from it, or it is
-application code and belongs in the consumer — see `docs/ORGANIZATION_CONTRACT.md`.
+application code and belongs in the consumer â€” see `docs/ORGANIZATION_CONTRACT.md`.
 
 ## Conventions
 
 - **File names** are kebab-case. Inside `data/` and `save/` the directory already gives the context,
   so name the file after the thing: `save/labs.ts`, not `save/labs-from-save.ts`.
-- **Extractors** are `extract<Thing>FromSaveRoot(root)` and return `null` when the save has no data
+- **Save readers** are `read<Thing>FromSaveRoot(root)` and return `null` when the save has no data
   for that feature. Never throw on an old or partial save.
 - **Report what you couldn't read** with a `warnings: string[]` on the result rather than silently
   dropping it.
@@ -71,17 +70,17 @@ application code and belongs in the consumer — see `docs/ORGANIZATION_CONTRACT
 ## Tests
 
 Tests live next to the code as `*.test.ts` and run under Vitest. Anything that decodes or maps save
-data should have one — index-mapping bugs are silent and misreport a player's data rather than
+data should have one â€” index-mapping bugs are silent and misreport a player's data rather than
 failing.
 
 Use a synthetic fixture rather than a real save. `src/save/fixtures/` has an example. Tests that
 genuinely need a real save read `TOWER_TEST_SAVE` and skip when it is unset, so they never block
-a contributor who does not have one — and no one's save data ends up in the repository.
+a contributor who does not have one â€” and no one's save data ends up in the repository.
 
 ## Pull requests
 
 Keep them focused; one concern per PR is much easier to review. Run `npm run verify` before
-opening — it is exactly what CI runs.
+opening â€” it is exactly what CI runs.
 
 ## Third-party work
 

@@ -2,6 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { CALCULATOR_BUILDERS } from '../../src/builders'
 
 describe('builder invariants', () => {
+  it.each(CALCULATOR_BUILDERS.map(b => [b.id, b] as const))('%s: select option values are unique', (_id, b) => {
+    for (const field of b.fields) {
+      if (field.kind !== 'select') continue
+      const values = (field.options ?? []).map(option => option.value)
+      expect(new Set(values).size, `${b.id}.${field.key} has duplicate select values`).toBe(values.length)
+    }
+  })
+
   it.each(CALCULATOR_BUILDERS.map(b => [b.id, b] as const))('%s: normalize is idempotent', (_id, b) => {
     const once = b.normalize({} as never)
     const twice = b.normalize(once as never)

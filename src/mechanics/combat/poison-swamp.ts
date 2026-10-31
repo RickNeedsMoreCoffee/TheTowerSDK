@@ -43,6 +43,13 @@
  * ## Pool linger
  *
  * Each active swamp overlap adds +10 s to enemy poison timer per refresh.
+ * This is a low-level recovered timer expression, not a complete gameplay
+ * lifetime contract. The current public mechanic FAQ states that touching a
+ * swamp once leaves an enemy poisoned until death: poison damage and the 25%
+ * movement slow persist after it leaves the pool. Stun is separately rolled
+ * on entry/re-entry, not on every poisoned tick. Do not infer that poison/slow
+ * expires on pool exit or after ten seconds from this helper alone.
+ * https://the-tower.notion.site/How-does-Poison-Swamp-work-1db91383b93f80afa490d49db9adb384
  *
  * ## Stun proc prerequisites
  *
@@ -129,10 +136,18 @@ export function poisonStackIncrement(poisonTickInterval: number): number {
   return 1 / poisonTickInterval
 }
 
+/** Low-level timer refresh only; does not define the persistent poison/slow lifetime. */
 export function refreshPoisonLinger(currentPoisonTime: number): number {
   return currentPoisonTime + SWAMP_POISON_LINGER_SECONDS
 }
 
+/**
+ * Low-level recovered duration expression with unresolved lab-slot input mapping.
+ * `lab57Level`/`lab59Level` are not a verified mapping from the public stun-unlock
+ * and stun-time research levels. Do not pass those catalog levels directly or
+ * interpret this result as the current player-facing stun duration. Resolve
+ * displayed research benefits through the lab catalog for mathematical models.
+ */
 export function swampStunDurations(input: SwampStunDurationInput): {
   halfStun: number
   fullStun: number

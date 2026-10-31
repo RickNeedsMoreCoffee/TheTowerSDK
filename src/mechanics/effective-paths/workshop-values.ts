@@ -126,6 +126,11 @@ const DIVERGING = new Set(WORKSHOP_STATS_DIVERGING_FROM_SHEET)
  * Look up a workshop stat at a level, in the units the Effective Paths model
  * expects.
  *
+ * This is a SHEET unit adapter, not a universal game-stat getter. In particular,
+ * Recovery Amount uses the sheet's /100 normalization (L300: 0.0134), while
+ * getOutOfRoundRecoveryAmountPreview returns the actual max-health fraction
+ * (L300 before labs/modules: 1.34). Combat callers must use that game preview.
+ *
  * Returns `null` for an unknown stat, a level the table does not cover, or one
  * of the stats where the sheet and the game disagree — in every case because
  * the honest answer is "this cannot be converted", and a number would be

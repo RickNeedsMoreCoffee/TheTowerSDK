@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { buildThornsWallChart } from '../../src/mechanics/combat/thorns-calculator'
+import { buildThornsBaseChart, buildThornsWallChart } from '../../src/mechanics/combat/thorns-calculator'
+import { thornDamageOnHit } from '../../src/mechanics/combat/thorns'
 import { getHeatEffectivenessPercent, TOURNAMENT_HEAT_WAVE_TABLE } from '../../src/mechanics/battle-conditions/tournament-heat-bc'
 
 /**
@@ -32,6 +33,22 @@ function hitsAtWave(heatWave: number, tournamentTier: 'none' | 't11' | 't14' | '
 }
 
 describe('thorns reads tournament heat as an interval table', () => {
+  it('ordinary contact amount uses maximum HP independently of attack damage', () => {
+    // v29.1.3 evidence establishes the enemy's maximum-health basis;
+    // the low-level contactDamage input is therefore supplied maximum HP.
+    expect(thornDamageOnHit({ enemyFactor: 1, thornMultiplier: 0.51, contactDamage: 1000 })).toBe(510)
+    expect(thornDamageOnHit({ enemyFactor: 1, thornMultiplier: 0.51, contactDamage: 2000 })).toBe(1020)
+  })
+
+  it('keeps the current chart equality policy explicit pending native branch corroboration', () => {
+    // This pins current public behavior without treating the inferred strict
+    // boundary in the knowledge tests as independent native evidence.
+    const row = (percent: number) => buildThornsBaseChart({ baseThorns: percent, tier: 1 })[0]
+    expect(row(49).hitsToKillElite).toBe(3)
+    expect(row(50).hitsToKillElite).toBe(3)
+    expect(row(51).hitsToKillElite).toBe(2)
+  })
+
   it('gives the same answer everywhere inside one breakpoint interval', () => {
     /*
      * 400 is a row; 401 and 449 are inside the row's interval and 450 starts the next one.

@@ -41,7 +41,7 @@ function spawnYieldForWaveRow(
   return resolveWaveSpawnYieldFromAccount({
     tier: input.tier,
     wave,
-    enemyBalanceMastery: input.enemyBalanceMasteryLevel,
+    enemyBalanceMastery: input.enemyBalanceActive === false ? -1 : input.enemyBalanceMasteryLevel,
     waveAcceleratorMastery: input.waveAcceleratorMasteryLevel,
     useSpawnGates: input.useSpawnGates === true,
     useSpawnQuantum: input.useSpawnQuantum,
@@ -66,6 +66,23 @@ export function forEachWaveCoinRow(
   options: WaveCoinSimulationOptions,
   visit: (row: WaveCoinSimRow) => void,
 ): void {
+  const timeline = input.perkCoinTimeline ?? []
+  if (timeline.length > 4096) throw new RangeError('Perk coin timeline exceeds 4096 events')
+  let previousWave = 0
+  for (const event of timeline) {
+    if (!Number.isInteger(event.wave) || event.wave <= previousWave || event.wave > 1_000_000
+      || !Number.isFinite(event.coinMultiplier) || event.coinMultiplier < 1
+      || !Number.isFinite(event.killCoinMultiplier ?? 1) || (event.killCoinMultiplier ?? 1) < 1) {
+      throw new RangeError('Perk coin timeline requires sorted unique positive waves and finite multipliers at least 1')
+    }
+    previousWave = event.wave
+  }
+  if (input.perkCoinTimeline !== undefined && (input.allCoinPerkLevel > 0 || input.hasCoinTradeOffPerk)) {
+    throw new RangeError('Perk coin timeline requires neutral static coin perks')
+  }
+  let timelineIndex = 0
+  let perkCoinMultiplier = 1
+  let perkKillCoinMultiplier = 1
   const ctx = buildWaveContext(input)
   const wsAdjust = buildWaveSkipPerWaveAdjust(
     ctx.waveSkipSkipChance,
@@ -78,13 +95,18 @@ export function forEachWaveCoinRow(
     ctx.targetWave,
     Math.max(1, Math.floor(Number(options.maxRows ?? ctx.targetWave) || ctx.targetWave)),
   )
-  const coinWeightPerKill = ordinaryCoinWeightAtTier(input.tier)
+  const coinWeightPerKill = ordinaryCoinWeightAtTier(input.tier, input)
   let prevRawKillCoins = 0
   let prevPlayedBaseKillCoins = 0
   let prevRawWaveCoins = 0
   let prevPlayedBaseWaveCoins = 0
 
   for (let wave = 1; wave <= limit; wave += 1) {
+    while (timelineIndex < timeline.length && timeline[timelineIndex]!.wave <= wave) {
+      const event = timeline[timelineIndex++]!
+      perkCoinMultiplier = event.coinMultiplier
+      perkKillCoinMultiplier = event.killCoinMultiplier ?? 1
+    }
     const spawnFraction = wsAdjust.spawnFraction
     const spawnTicks = enemySpawnRateCapFromWaveAcceleratorChart({ wave, waveAcceleratorMastery: waMastery })
     const spawnYield = spawnYieldForWaveRow(input, wave, options.spawnYield)
@@ -97,7 +119,7 @@ export function forEachWaveCoinRow(
     const expectedKills = fullKills * spawnFraction
     const rawKillCoins = wave <= introCap
       ? 0
-      : expectedKills * wave * coinWeightPerKill
+      : expectedKills * wave * coinWeightPerKill * perkCoinMultiplier * perkKillCoinMultiplier
     const playedBaseKillCoins = rawKillCoins
     const skipKillCoins = wave > 1 && wave > introCap
       ? waveSkipIncomeEv(
@@ -109,7 +131,7 @@ export function forEachWaveCoinRow(
         wsAdjust.incomeMultiplier,
       )
       : 0
-    const playedBaseWaveCoins = wave <= introCap ? 0 : coinsPerWaveMult * spawnFraction
+    const playedBaseWaveCoins = wave <= introCap ? 0 : coinsPerWaveMult * spawnFraction * perkCoinMultiplier
     const skipWaveCoins = wave > 1 && wave > introCap
       ? waveSkipIncomeEv(
         prevRawWaveCoins,

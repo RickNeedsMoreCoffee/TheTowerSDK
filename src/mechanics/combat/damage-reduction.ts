@@ -47,15 +47,17 @@ export function applyAbsoluteDefense(damage: number, defenseAbsolute: number): n
   return Math.max(0, damage - defenseAbsolute)
 }
 
+/** Configured mitigation: multiplicative reductions precede flat defense.
+ * Retained v29.1.3 CalculateDamageReduction SHA256
+ * 90afc49d438d77df474a6f96e1ba82cbda696a5d611eb3afa3d851c18e47bc29.
+ * The native helper can return a negative value; this player-facing estimator
+ * clamps that result to zero rather than treating it as healing.
+ */
 export function computeDamageReductionResult(input: DamageReductionInput): number {
   let dmg = input.rawDamage
 
   if (input.defenseRel != null) {
     dmg = applyRelativeDefense(dmg, input.defenseRel)
-  }
-
-  if (input.defenseAbsolute != null) {
-    dmg = applyAbsoluteDefense(dmg, input.defenseAbsolute)
   }
 
   if (input.chronoDamageReductionMult != null) {
@@ -74,6 +76,10 @@ export function computeDamageReductionResult(input: DamageReductionInput): numbe
 
   if (input.rendArmorMultiplier != null) {
     dmg *= input.rendArmorMultiplier
+  }
+
+  if (input.defenseAbsolute != null) {
+    dmg = applyAbsoluteDefense(dmg, input.defenseAbsolute)
   }
 
   return clamp(dmg, 0, Number.MAX_VALUE)

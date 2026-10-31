@@ -5,6 +5,9 @@ import {
   bounceShotTargets,
   criticalChance,
   criticalMultiplier,
+  criticalFactorStat,
+  superCriticalChanceStat,
+  superCriticalMultiplierStat,
   multishotChance,
   multishotMultiplier,
   multishotTargets,
@@ -26,6 +29,19 @@ import fixtures from '../../fixtures/mechanics/effective-paths-damage-stats.fixt
 
 const close = (ours: number, sheet: number, digits = 12) =>
   expect(Math.abs(ours / sheet - 1)).toBeLessThan(10 ** -digits)
+
+it('static critical helpers preserve lab/substat/enhancement and mastery grouping', () => {
+  expect(criticalFactorStat({ base: 10, labLevel: 99, substat: 2,
+    enhancementMultiplier: 5, relicPct: .18, vaultPct: .1 }))
+    .toBe((10 * (1 + .03 * 99) + 2) * 5 * 1.18 * 1.1)
+  expect(superCriticalChanceStat({ base: .2, labLevel: 20, substat: .03,
+    hasCriticalChanceMastery: true, masteryLevel: 9, flatBonus: .01, beingAnnihilator: .04 }))
+    .toBe(.01 + .2 + .03 + .02 + .1 + .04)
+  expect(superCriticalMultiplierStat({ base: 4, labLevel: 22, substat: 2,
+    enhancementMultiplier: 5, relicPct: .1, vaultPct: .2,
+    hasCriticalChanceMastery: true, masteryLevel: 9 }))
+    .toBe((4 * (1 + .02 * 22) + 2) * 5 * 1.1 * 1.2 * 1.1)
+})
 
 describe('EPD_CRIT_CHANCE', () => {
   for (const [index, c] of fixtures.criticalChance.entries()) {

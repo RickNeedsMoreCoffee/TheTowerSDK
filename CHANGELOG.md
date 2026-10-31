@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.12.1
+
+**Release housekeeping.** Retired obsolete workbook and artwork-index generators, corrected
+versioned vault reference notes, and updated contributor documentation. Runtime values and APIs
+are unchanged.
+
+## 0.12.0
 
 **Breaking: lab tables use lab slugs.** Workshop table caches are keyed by `LabWorkshopSlug`,
 including `labs_speed` and `common_enemy_health`. Resistance inputs are
@@ -17,7 +23,7 @@ skip to the main content. Page-specific search metadata, canonical URLs, a sitem
 data improve discoverability; link-preview tags use the SDK logo.
 
 **Synchronicity slots name their bots.** `readBotSynchronicityFromSaveRoot` now returns the
-active preset's `slots` — the bot in each, or `null` — and the `bots` synced there, reading the
+active preset's `slots` â€” the bot in each, or `null` â€” and the `bots` synced there, reading the
 save's bot type through the bot catalog's `index` (0 Flame Bot to 4 Bot Bot). `synchronicityBots`
 is by slot, not by bot. A slot value that names no bot is reported in `unrecognizedSlotValues`,
 and `inSave` says whether the save carries synchronicity at all.
@@ -41,7 +47,7 @@ its generated specs no longer reach into `knowledge`.
 
 **Renames.** `TOOL_LAB_OVERVIEW_CATEGORY_ORDER` is `LAB_CATEGORY_NAMES`,
 `isToolLabOverviewCategoryLabel` is `isLabCategoryName`, `VaultV29TrackerTarget` is
-`VaultV29LevelTarget`, and `GUILD_SEASON_RELIC_TOKEN_COST` — a lookup, not a price — is
+`VaultV29LevelTarget`, and `GUILD_SEASON_RELIC_TOKEN_COST` â€” a lookup, not a price â€” is
 `GUILD_SEASON_RELIC_TOKEN_COST_BY_RARITY`.
 
 **Breaking: deprecated aliases removed.** `BC_COUNTER_LAB_SLUGS`,
@@ -106,8 +112,8 @@ from `TOWER_TEST_SAVE`.
 ## 0.9.0
 
 **Community guides are credited by name.** `thetowersdk/contributions` now carries the guides the
-knowledge graph draws its contextual claims from — minionek, McBlue, Evan, DrAudacious, ColbyJack,
-Kitchen Salt, 1410c and NanaSeiYuri — each with the exact `ref` the graph cites it by, and a test
+knowledge graph draws its contextual claims from â€” minionek, McBlue, Evan, DrAudacious, ColbyJack,
+Kitchen Salt, 1410c and NanaSeiYuri â€” each with the exact `ref` the graph cites it by, and a test
 that checks the graph still cites it. A guide credited but unused would put someone's name on work
 this package never took.
 
@@ -126,10 +132,10 @@ where it belongs, and a section on what `normalize` does with input nobody check
 
 **Two new entry points.**
 
-- **`thetowersdk/save-decoder`** — the save reader with no Node imports, for decoding
+- **`thetowersdk/save-decoder`** â€” the save reader with no Node imports, for decoding
   `playerInfo.dat` in a browser tab. Gunzip comes from `DecompressionStream`; the NRBF reader is
   the same one `thetowersdk/node` uses. A save never has to leave the machine it is on.
-- **`thetowersdk/contributions`** — the roster of whose work this package carries, as data, so a
+- **`thetowersdk/contributions`** â€” the roster of whose work this package carries, as data, so a
   tool can render the credit it is actually using.
 
 **Calculator labels are the game's.** Every builder field is now named the way the Run Tracker and
@@ -138,20 +144,20 @@ the community name it: `Enable Chrono Field (CF)`, `CF Reduction (%)`, `Defense 
 Mult`, read from the enhancement definitions the package already carries.
 
 **Thorns is the calculator players use.** It asked for an enemy factor, a thorn multiplier and a
-module benefit — parameters of a formula, none of which a player can read anywhere — and returned
+module benefit â€” parameters of a formula, none of which a player can read anywhere â€” and returned
 damage per hit. It now takes base thorns, tier, plasma cannon and its mastery, the BC reduction
 labs and Sharp Fortitude, and answers in hits to kill. `thornDamageOnHit` is unchanged in
 `thetowersdk/mechanics` for a caller who has the formula's own inputs.
 
 **The MCP scratchpad works outside this repository.** `sdk_sandbox_run` shelled out to a script in
 the development monorepo, so for anyone who installed the package it was advertised and failed to
-spawn. It is now built from what the package ships — `list`, `export`, `calc`, `format`, `decode` —
+spawn. It is now built from what the package ships â€” `list`, `export`, `calc`, `format`, `decode` â€”
 and the tools that genuinely need the monorepo are no longer advertised where they cannot run.
 
 ## 0.6.0
 
 **Removed: `thetowersdk/inputs`.** It held the account-state shapes the Run Tracker's own pages
-persist — hub merge helpers, storage compaction, per-page local-state schemas. That is one
+persist â€” hub merge helpers, storage compaction, per-page local-state schemas. That is one
 website's plumbing, not a description of The Tower, and it does not belong in a package about the
 game.
 
@@ -162,14 +168,14 @@ import { CALCULATOR_BUILDERS } from 'thetowersdk/builders'
 
 const calc = CALCULATOR_BUILDERS.find((entry) => entry.id === 'assist.stones')
 
-calc.fields     // [{ key: 'currentLevel', label: 'Current level', kind: 'number', min: 0, max: 69 }, …]
+calc.fields     // [{ key: 'currentLevel', label: 'Current level', kind: 'number', min: 0, max: 69 }, â€¦]
 calc.defaults   // { currentLevel: 0, targetLevel: 10 }
 calc.normalize  // whatever you have stored -> a complete, valid input record
 calc.compute    // the result
 ```
 
-That is the same guarantee — pass what you have, get back a complete record with defaults filled
-in — for all fifteen calculators, described per calculator rather than as one shared blob.
+That is the same guarantee â€” pass what you have, get back a complete record with defaults filled
+in â€” for all fifteen calculators, described per calculator rather than as one shared blob.
 
 Twelve entry points now. Everything else is unchanged.
 
@@ -183,18 +189,18 @@ on 0.5.2.
 
 Enough to build a tool end to end without writing any of the plumbing:
 
-- **`thetowersdk/builders`** — the calculators as data. Each one declares its
+- **`thetowersdk/builders`** â€” the calculators as data. Each one declares its
   fields, their units and their caps, so a UI, a bot command or a test can be
   generated from the same declaration rather than hand-written three times.
-- **`thetowersdk/bot`** — `createTowerBot()` and `calculatorCommands()`, which
+- **`thetowersdk/bot`** â€” `createTowerBot()` and `calculatorCommands()`, which
   turn every builder into a slash command. Transport-agnostic: it produces
   commands and replies, and never touches a Discord client.
-- **`thetowersdk/sheets`** — a Google Sheets reader that knows the two ways a
+- **`thetowersdk/sheets`** â€” a Google Sheets reader that knows the two ways a
   sheet lies to you. A spilled cell carries no formula, and the API truncates
   trailing empties, so a short row means "unknown", not "zero".
-- **`thetowersdk/inputs`** — the shared input vocabulary the builders parse,
+- **`thetowersdk/inputs`** â€” the shared input vocabulary the builders parse,
   including a decimal separator that follows the reader's locale.
-- **`thetowersdk/assets`** — which image file is a given module or card. A
+- **`thetowersdk/assets`** â€” which image file is a given module or card. A
   module's file is named after its INITIALS and rarity (`Om Chip` at Epic is
   `epic_oc.png`), which is not guessable from its name. Every function returns
   `null` for something with no art, so a caller can tell that apart from a
@@ -204,15 +210,15 @@ Enough to build a tool end to end without writing any of the plumbing:
 Conventions that now hold across every calculator, because each was a real bug
 first: a level past the end of a cost table is refused rather than priced at
 zero, caps come from each curve rather than a shared constant, and any lookup
-keyed by a name from a save, a sheet or a URL uses own-key access — `??` cannot
+keyed by a name from a save, a sheet or a URL uses own-key access â€” `??` cannot
 reject an inherited function.
 
 And the game data that used to live in the consuming application.
 
-- **`thetowersdk/charts`** — the shared chart registry, its data, and the links
+- **`thetowersdk/charts`** â€” the shared chart registry, its data, and the links
   from each chart to the mechanics it documents. A chart is a view over game
   data, so its definition is game data.
-- **`thetowersdk/knowledge`** — the Tower Oracle graph: mechanics, how they
+- **`thetowersdk/knowledge`** â€” the Tower Oracle graph: mechanics, how they
   relate, and the specific ways each has been misread.
 
 Moved into `thetowersdk/data` from `@tmrxjd/platform`, which now re-exports them
@@ -221,7 +227,7 @@ so existing consumers keep working:
 - Relic unlock methods and the published bonus-total categories.
 - Theme category definitions, the passive coin-bonus coefficients, and the full
   theme catalog. The formula string and the 169 per-item bonus literals are gone
-  — both are derived from one rate per category now.
+  â€” both are derived from one rate per category now.
 - Vault tree summaries, derived from the node lists rather than transcribed.
 - Daily mission tier and weekly reward tables, with weekly totals derived from
   the rows they sum.
@@ -248,7 +254,7 @@ and the public graph surfaces (`ep-graph`, `sdk-graph`, `save-graph`, `debug-gra
 planner-engine, mcp-contract).
 
 Doctor / kernel / governance-adapter / registry / sandbox / docs-gen / lsp stay in the monorepo
-source tree for AGS tooling but are **not** part of the published `thetowersdk/mechanics` barrel —
+source tree for AGS tooling but are **not** part of the published `thetowersdk/mechanics` barrel â€”
 they need `@tmrxjd/governance-engine`, which is not a public npm dependency of this package.
 
 ## 0.4.1
@@ -256,7 +262,7 @@ they need `@tmrxjd/governance-engine`, which is not a public npm dependency of t
 `sharedToolsCatalog` gains an Effective Paths entry, so a consumer building links or a menu from the
 catalog gets the tool rather than a gap.
 
-README: a worked example of planning for a real player — what a config is versus levels, how to fill
+README: a worked example of planning for a real player â€” what a config is versus levels, how to fill
 a zero record from the candidate lists, and the fact that mapping a save onto them is the caller's
 job rather than something this package does. The MCP section now lists the tools and says which two
 change how an agent works: `plan_effective_path` and `wiki_page`.
@@ -287,7 +293,7 @@ levels before planning and returns an empty path with a populated `issues` rathe
 against a record it cannot use.
 
 **This is additive for callers reading a plan, and a new field for anyone constructing one.** If you
-destructure a plan result, `issues` is `EffectiveLevelsIssue[]` — `{ path, message }`.
+destructure a plan result, `issues` is `EffectiveLevelsIssue[]` â€” `{ path, message }`.
 
 Levels are held to completeness and finiteness, not magnitude. Negative and fractional levels are
 accepted deliberately: the source sheet carries a negative stone level of its own.
@@ -296,12 +302,12 @@ accepted deliberately: the source sheet carries a negative stone level of its ow
 
 `planPath` checked each candidate's value for finiteness but not the value it ranked them against.
 With a non-finite baseline every ROI was `NaN`, `NaN > NaN` is false, and the first candidate
-examined won every step — a path in declaration order presented as a recommendation. Those
+examined won every step â€” a path in declaration order presented as a recommendation. Those
 candidates are now skipped as `unevaluable` and reported.
 
 ### Renames
 
-- `mechanics/coverage.ts` → `mechanics/formula-coverage.ts`. Same exports, unchanged. The deploy
+- `mechanics/coverage.ts` â†’ `mechanics/formula-coverage.ts`. Same exports, unchanged. The deploy
   build of a consuming app rejects any file named `coverage.ts` as a test artefact.
 - `EffectiveRegenLevels` and `ZERO_EFFECTIVE_REGEN_LEVELS` now live in
   `mechanics/effective-paths-regen-levels.ts`, matching where the damage and economy models keep
@@ -336,8 +342,8 @@ import { generatedLabs, labs } from 'thetowersdk/data'
 import { LAB_CATALOG } from 'thetowersdk/data'
 ```
 
-They were two files split by category with no overlap — 150 labs in one, 75 in
-the other — and, worse, two units. `labs` stored cost pre-scaled with a
+They were two files split by category with no overlap â€” 150 labs in one, 75 in
+the other â€” and, worse, two units. `labs` stored cost pre-scaled with a
 `currency` of B/T/q/Q, so `cost: 1.1` meant 1.1 quadrillion, while
 `generatedLabs` stored coins. Nothing in the shape said which you had.
 
@@ -367,7 +373,7 @@ One verb per idea. The retired ones and what they became:
 
 `find*` returns `T \| null \| undefined`; `get*` always returns a value; `read*`
 pulls structure out of a save or file; `compute*` calculates. The split was made
-from return types read out of the compiler, not from guessing at names — 124 of
+from return types read out of the compiler, not from guessing at names â€” 124 of
 the 265 `resolve*` functions turned out to be doing arithmetic.
 
 34 names also lost a redundant `From<Source>` tail, but only where no sibling
@@ -379,8 +385,8 @@ The rules are in [`docs/NAMING.md`](docs/NAMING.md).
 
 ### Glossary
 
-The 297 hand-curated community acronyms — what players actually type, `dmg+`,
-`zerk`, `aspd+` — are merged in. The glossary goes from 233 entries to 500 and
+The 297 hand-curated community acronyms â€” what players actually type, `dmg+`,
+`zerk`, `aspd+` â€” are merged in. The glossary goes from 233 entries to 500 and
 covers all 297, asserted by a test.
 
 Entries now carry `source`. `catalog` means the expansion names something in the
@@ -389,8 +395,8 @@ catalogs have no row for. An expansion that resolves to nothing and is not
 marked `community` fails the build, so nothing can quietly become a claim about
 the game.
 
-`GC` now returns two entries — Galaxy Compressor from the module table and glass
-cannon from the community — flagged ambiguous rather than the SDK picking one.
+`GC` now returns two entries â€” Galaxy Compressor from the module table and glass
+cannon from the community â€” flagged ambiguous rather than the SDK picking one.
 
 ### Also
 
@@ -401,7 +407,7 @@ cannon from the community — flagged ambiguous rather than the SDK picking one.
 
 ## 0.2.0
 
-Lab catalog consolidation, first cut. Superseded by 0.3.0 — prefer that.
+Lab catalog consolidation, first cut. Superseded by 0.3.0 â€” prefer that.
 
 ## 0.1.1
 

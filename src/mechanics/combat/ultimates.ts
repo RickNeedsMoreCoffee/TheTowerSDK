@@ -11,7 +11,7 @@
  * ## Chain Lightning
  *
  *   base = incoming × moduleMult
- *   if elite (type 7–8) and lab active:
+ *   if Scatter parent/child (type 7–8) and lab active:
  *     stackMult = labValue × hitCount² + 1
  *     base ×= stackMult
  *     hitCount += 1
@@ -62,7 +62,9 @@ export function nextLightningHitCount(hitCount: number): number {
   return hitCount + 1
 }
 
-/** True when enemy.type − 7 ∈ [0, 1] (Ray / Scatter elites). */
+/** True for Scatter parent (7) or Scatter child (8). Ray is type 9.
+ * Historical function name retained for API compatibility; not all elites qualify.
+ */
 export function isLightningEliteType(enemyType: number): boolean {
   const t = enemyType - 7
   return t >= 0 && t <= 1

@@ -1,9 +1,9 @@
 # Effective Paths reference fixtures
 
 Snapshots of the community [Effective Paths spreadsheet][sheet], used to check
-our game data against an independent authority. The sheet's author gets the
-numbers from the developers, which makes it the best cross-check available short
-of re-extracting the game.
+our game data against an independent reference. The sheet's author obtains
+values from the developers; these snapshots preserve the spreadsheet comparison
+used by the SDK's data tests.
 
 **These are references, not sources.** Nothing in the SDK is generated from
 them. Where the reference disagrees with us the answer is to look, not to copy —

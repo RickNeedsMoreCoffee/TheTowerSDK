@@ -5,7 +5,7 @@ so you can build calculators, planners, spreadsheets, charts and bots without tr
 number by hand.
 
 ```bash
-npm install thetowersdk
+npm install thetowersdk@0.13.0 --save-exact
 ```
 
 - **Game data** — labs, workshop, modules, cards, perks, relics, guardians, bots, ultimate weapons
@@ -112,8 +112,6 @@ can run as many as you like over the same root.
 ---
 
 ## Getting an Official Game Export
-
-The export-only reader described here is the current repository source. See the [source-build instructions](https://tmrxjd.github.io/TheTowerSDK/docs/install/) when using it before an npm release.
 
 First tap your **Player ID five times** in The Tower to create your first export and reveal the export controls. Then open **Settings → Toggles → External Tools Export → Manual Export**. Enable **Auto Export for External Tools** to keep the export updated. Import only `tool_export.json`.
 

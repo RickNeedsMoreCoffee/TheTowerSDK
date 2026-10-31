@@ -12,7 +12,7 @@ Effective Paths: the cheapest route to a damage, economy or survivability target
 | `credits.ts` | Attribution for the Effective Paths formulas. | EFFECTIVE_PATHS_AUTHORS, EFFECTIVE_PATHS_MAINTAINERS, EFFECTIVE_PATHS_CONTRIBUTORS, EFFECTIVE_PATHS_SOURCE (+5 more) |
 | `currencies.ts` | Effective Paths — what every path spends, and on what. | EFFECTIVE_PATH_CURRENCIES, EFFECTIVE_PATHS, SHARED_ACROSS_CURRENCIES |
 | `damage-base.ts` | Effective Paths — the `Base` half of the eDamage composition. | DAMAGE_RUN_TYPES, DamageRunType, towerDamage, tradeOffDamagePerk (+8 more) |
-| `damage-stats.ts` | Effective Paths — the `EPD_*` damage stat layer. | criticalChance, criticalMultiplier, ultimateWeaponCriticalMultiplier, multishotChance (+24 more) |
+| `damage-stats.ts` | Effective Paths — the `EPD_*` damage stat layer. | criticalChance, criticalFactorStat, superCriticalChanceStat, superCriticalMultiplierStat (+28 more) |
 | `damage-substats.ts` | Effective Paths — how the damage tab reads a substat, and bullets per second. | assistCapacities, combinedSubstat, bulletsPerSecond |
 | `edamage-candidates.ts` | — | EFFECTIVE_DAMAGE_LAB_CANDIDATES, EFFECTIVE_DAMAGE_STONE_CANDIDATES, EFFECTIVE_DAMAGE_COIN_CANDIDATES, EFFECTIVE_DAMAGE_KEYS_CANDIDATES (+1 more) |
 | `edamage-coin-levels.ts` | The coin band, `eDamage Coins!BO5:CM5`, read into {@link EffectiveDamageCoinLevels}. | COIN_BAND_HEADERS, COIN_BAND_NON_LEVELS, COIN_BAND_DELTA_FIELDS, effectiveDamageCoinLevelsFromSheet |
@@ -30,7 +30,7 @@ Effective Paths: the cheapest route to a damage, economy or survivability target
 | `eecon-discount.ts` | Effective Economy discounts: | moduleCoinsInvested, LAB_DISCOUNT_UNCOUNTED_LABS, labCoinsRemainingDetailed, labCoinsRemaining (+8 more) |
 | `eecon-levels.ts` | Effective Paths — the levels the eEcon paths buy. | ZERO_EFFECTIVE_ECONOMY_LEVELS, ECONOMY_TIME_LEVEL_KEYS, ECONOMY_STONE_LEVEL_REFS, ECONOMY_STONE_SHARED_KEYS (+1 more) |
 | `eecon-plan.ts` | Effective Paths — planning an eEcon path. | ECONOMY_PLAN_VARIANTS, DISCOUNT_PATH_UNSUPPORTED, SHEET_DEFAULT_COINS_PER_HOUR, EFFECTIVE_ECONOMY_UPGRADES (+2 more) |
-| `eecon-stats.ts` | Effective Paths — the economy stats, `EPC_*`. | ECONOMY_PERK_STACKS, coinsPerKillWorkshopValue, coinsPerKill, coinsCard (+23 more) |
+| `eecon-stats.ts` | Effective Paths — the economy stats, `EPC_*`. | ECONOMY_PERK_STACKS, coinsPerKillWorkshopValue, coinsPerKill, coinsCard (+24 more) |
 | `eecon-stone-mastery.ts` | Effective Paths — stone costs for the five card masteries on the econ stone tab. | STONE_MASTERY_COSTS, STONE_MASTERY_LEVEL_KEY_BY_NAME, STONE_MASTERY_CARD_KEY_BY_NAME, STONE_MASTERY_NAMES (+3 more) |
 | `eecon-uw-cd.ts` | Effective Paths — `UW CD`, the synced cooldown composite on the stone tab. | UW_CD_MIN_MAX_COOLDOWN_SECONDS, uwCooldownSecondsAt, uwCdMaxCooldownSeconds, isUwCdCandidateVisible (+5 more) |
 | `ehp-from-sheet.ts` | Effective health and regen inputs read from Effective Paths sheet cells, so a sheet's own values can be planned from. | effectiveHealthConfigFromSheet, effectiveHealthLevelsFromSheet, effectiveRegenConfigFromSheet |
@@ -51,7 +51,7 @@ Effective Paths: the cheapest route to a damage, economy or survivability target
 | `schema.ts` | Effective Paths — the sync schema. | EffectivePathsExprSchema, EffectivePathsInputError, evaluateExpr, collectExprInputs (+16 more) |
 | `stone-costs.ts` | Effective Paths — what a stone upgrade costs. | ASSIST_SUBSTAT_MAX_LEVEL, ASSIST_BONUS_MAX_LEVEL, assistUpgradeStoneCost, cumulativeAssistStoneCost |
 | `types.ts` | The types `mechanics/effective-paths/` exports, in one place — so a neighbouring module finds the shape it needs here instead of declaring its own under a second name. | AssistEfficiencyKind, AssistModuleCategory, ModuleCoinDiscount, EffectivePathsCredit (+62 more) |
-| `ultimate-weapons.ts` | Effective Paths — the `STAT_UW_*` and `EP_UW_*` layer. | chainLightningChance, chainLightningDamage, chainLightningQuantity, deathWaveDamage (+14 more) |
+| `ultimate-weapons.ts` | Effective Paths — the `STAT_UW_*` and `EP_UW_*` layer. | chainLightningChance, chainLightningDamage, chainLightningQuantity, deathWaveDamage (+16 more) |
 | `uw-dps.ts` | Effective Paths — what each ultimate weapon contributes per second. | realGameSpeed, deathWaveDps, chainLightningDps, smartMissilesDps (+4 more) |
 | `workbook.ts` | Effective Paths — reading the sheet's functions out of a workbook export. | parseWorkbookDefinedNames, buildEffectivePathsDocument, normalizeSheetVersion |
 | `workshop-values.ts` | Workshop stat values as the Effective Paths sheet reads them: | WORKSHOP_STAT_MAPPINGS, WORKSHOP_STATS_DIVERGING_FROM_SHEET, WORKSHOP_STATS_ABSENT_FROM_SHEET, workshopStatValue (+4 more) |

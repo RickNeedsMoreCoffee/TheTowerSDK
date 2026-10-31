@@ -180,8 +180,8 @@ export const VAULT_KNOWLEDGE_NODES: readonly KnowledgeNode[] = [
       'Harmony nodes change what is POSSIBLE, not just what is bigger — Smart Demon Mode and Smart '
       + 'Nuke Automation insert themselves into the death-prevention chain, and Bot Presets removes '
       + 'the once-per-event bot respec limit entirely.',
-      'Auto Charge Berserker adds 0.1% of enemy damage to Berserker on kill, which changes '
-      + 'Berserker from a damage-taken mechanic into partly a damage-dealt one.',
+      'Auto Charge Berserker adds 0.1% of enemy damage to Berserker on kill, adding a '
+      + 'kill-based source alongside damage taken. This is the enemy damage stat, not tower damage dealt.',
       'Some nodes have prerequisites within the tree — Daily Mission Set Shard Type requires Free '
       + 'Mission Reroll first.',
     ],

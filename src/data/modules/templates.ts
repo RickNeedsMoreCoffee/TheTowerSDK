@@ -37,7 +37,9 @@ const uniqueModules: ModuleTemplate[] = [
     unique: true,
     minRarity: 'Epic',
     maxRarity: 'Ancestral 5',
-    description: (value?: number) => `When you super crit, your next ${value ?? 5} shots are guaranteed super crits and gain ${value ?? 14}% super crit chance.`,
+    // v28.3 (2026-06-29): rarity changes the passive chance, not the fixed shot count.
+    // https://www.reddit.com/r/TheTowerGame/comments/1uixwsj/v283_patch_notes/
+    description: (value?: number) => `Gain ${value ?? 14}% Super Crit chance. When you Super Crit, your next 5 shots are guaranteed Super Crits.`,
     baseEffect: 'Super crits guarantee the next 5 shots are super crits.',
     rarityBonuses: [
       { rarity: 'Epic', value: 5 },

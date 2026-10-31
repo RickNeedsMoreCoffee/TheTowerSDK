@@ -7,7 +7,7 @@ Card costs and the lookup from a card to the effect it applies.
 | File | Purpose | Exports |
 |---|---|---|
 | `costs.ts` | Card level upgrade costs in gems. | CARD_LEVEL_COPY_REQUIREMENTS, cardLevelUpgradeGemCost, cardLevelCopiesRequired |
-| `effect-lookup.ts` | Card level / mastery effect lookup — values from `card-data.ts`. | cardLevelMultiplier, cardLevelPercentFraction, cardMasteryPercentFraction, enemyBalanceSpawnMultiplier (+1 more) |
+| `effect-lookup.ts` | Card level / mastery effect lookup — values from `card-data.ts`. | cardLevelMultiplier, cardLevelPercentFraction, cardMasteryPercentFraction, superTowerActiveDamageMultiplier (+4 more) |
 | `index.ts` | Cards: | — |
 
 [← src](../../MAP.md) · [← the package](../../../MAP.md)

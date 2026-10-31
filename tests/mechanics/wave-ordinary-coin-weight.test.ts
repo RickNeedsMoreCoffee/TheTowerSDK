@@ -8,7 +8,7 @@ import { ordinarySpawnChancesForCoinMix } from '../../src/mechanics/waves/spawn-
 describe('wave-ordinary-coin-weight', () => {
   it('tier 1 coin weight is in ordinary band', () => {
     const w = ordinaryCoinWeightAtTier(1)
-    expect(w).toBeGreaterThan(1)
+    expect(w).toBeGreaterThan(0)
     expect(w).toBeLessThan(4)
   })
 
@@ -32,6 +32,7 @@ describe('wave-ordinary-coin-weight', () => {
     const w = ordinaryCoinWeightAtTier(21)
     const measured = measuredAverageEnemyCoinWeight()
     expect(Math.abs(w - measured)).toBeLessThan(0.2)
-    expect(measured).toBeCloseTo(2.34, 2)
+    // Basic's unconditional reward was corrected from1 to0; Critical Coin is explicit.
+    expect(measured).toBeCloseTo(2.14, 2)
   })
 })

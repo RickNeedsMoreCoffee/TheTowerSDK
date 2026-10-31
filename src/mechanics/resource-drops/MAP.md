@@ -7,6 +7,7 @@ Coin and cell income: where it comes from and how it is simulated.
 | File | Purpose | Exports |
 |---|---|---|
 | `accumulate-wave-econ.ts` | Fold per-wave econ rows into round totals. | NEUTRAL_COIN_SIMULATION_DEFAULTS, waveEconInputFromEnemyDrops, foldWaveEconRows, foldWaveCoinRows (+4 more) |
+| `card-rewards.ts` | — | CriticalCoinRewardInputs, CellsCardRewardInputs, criticalCoinExpectedBasePerBasicKill, cellsPerEliteAfterCard |
 | `coin-fetch.ts` | — | FETCH_COIN_CPM_FRACTION, estimateFetchCoinsFromRunCpm, estimateRunDurationMinutes |
 | `coin-generator-modules.ts` | — | GENERATOR_UNIQUE_EFFECT_TO_TEMPLATE_ID, COIN_RELEVANT_GENERATOR_UNIQUE_IDS, CoinRelevantGeneratorUniqueId, EquippedGeneratorUnique (+7 more) |
 | `coin-iap.ts` | — | RESOURCE_DROPS_COIN_IAP_MULTIPLIERS, computePackCoinMultFromIapToggles, iapTogglesFromLegacyMults |

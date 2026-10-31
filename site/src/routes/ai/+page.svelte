@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { adbBridgeSnippet, agentPrompts, mcpJson } from '$lib/content';
-	import { LINKS } from '$lib/links';
+	import { INSTALL_CMD, LINKS } from '$lib/links';
 	import { href } from '$lib/paths';
 	import CodeBlock from '$lib/ui/CodeBlock.svelte';
 	import GlassPanel from '$lib/ui/GlassPanel.svelte';
@@ -16,7 +16,7 @@
 <section class="mt-10">
 	<h2 class="text-xl font-medium">1. Connect An AI To The Package</h2>
 	<p class="mt-2 max-w-2xl text-sm text-muted">
-		After <code>npm install thetowersdk</code>, register this MCP server. The assistant can list
+		After <code>{INSTALL_CMD}</code>, register this MCP server. The assistant can list
 		exports, read catalogs, decode saves, plan paths, and fetch wiki pages.
 	</p>
 	<div class="mt-4 max-w-3xl">
