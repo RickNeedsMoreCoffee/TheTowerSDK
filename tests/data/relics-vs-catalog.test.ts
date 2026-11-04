@@ -167,3 +167,27 @@ describe('RELIC_TEMPLATES against the import catalog', () => {
     expect(split).toEqual([])
   })
 })
+
+describe('relic rarity by medal tier', () => {
+  // Template ids keep their original prefix when a rarity is corrected, because callers store them.
+  const medals = (requirement: string | undefined): string =>
+    /(\d+) medals/i.exec(requirement ?? '')?.[1] ?? ''
+
+  it('is Epic at 700 and 1100 medals', () => {
+    const wrong = RELIC_TEMPLATES
+      .filter(relic => ['700', '1100'].includes(medals(relic.requirement)))
+      .filter(relic => relic.rarity !== 'Epic')
+      .map(relic => relic.name)
+
+    expect(wrong).toEqual([])
+  })
+
+  it('is Rare at 350 and 550 medals', () => {
+    const wrong = RELIC_TEMPLATES
+      .filter(relic => ['350', '550'].includes(medals(relic.requirement)))
+      .filter(relic => relic.rarity !== 'Rare')
+      .map(relic => relic.name)
+
+    expect(wrong).toEqual([])
+  })
+})
