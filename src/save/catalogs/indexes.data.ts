@@ -6209,6 +6209,12 @@ export const THEME_CATALOG = [
     'label': 'Automaton',
   },
   {
+    'category': 'tower',
+    'catalogIndex': 84,
+    'name': 'Fractal',
+    'label': 'Fractal',
+  },
+  {
     'category': 'background',
     'catalogIndex': 1,
     'name': 'Interstellar',
@@ -6545,6 +6551,24 @@ export const THEME_CATALOG = [
     'label': 'Coral Reef',
   },
   {
+    'category': 'background',
+    'catalogIndex': 57,
+    'name': 'Fairy Forest',
+    'label': 'Fairy Forest',
+  },
+  {
+    'category': 'background',
+    'catalogIndex': 58,
+    'name': 'Steampunk',
+    'label': 'Steampunk',
+  },
+  {
+    'category': 'background',
+    'catalogIndex': 59,
+    'name': 'Fractals',
+    'label': 'Fractals',
+  },
+  {
     'category': 'menu',
     'catalogIndex': 1,
     'name': 'Dark Being',
@@ -6603,6 +6627,12 @@ export const THEME_CATALOG = [
     'catalogIndex': 10,
     'name': 'Coral Reef',
     'label': 'Coral Reef',
+  },
+  {
+    'category': 'menu',
+    'catalogIndex': 11,
+    'name': 'Fairy Forest',
+    'label': 'Fairy Forest',
   },
   {
     'category': 'profileBanner',
@@ -6669,6 +6699,12 @@ export const THEME_CATALOG = [
     'catalogIndex': 11,
     'name': 'Coral Reef',
     'label': 'Coral Reef',
+  },
+  {
+    'category': 'profileBanner',
+    'catalogIndex': 12,
+    'name': 'Fairy Forest',
+    'label': 'Fairy Forest',
   },
   {
     'category': 'guardian',

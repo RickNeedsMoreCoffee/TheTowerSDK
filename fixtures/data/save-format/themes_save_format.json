@@ -107,7 +107,8 @@
     "77": "Baby Dino",
     "81": "Seahorse",
     "82": "Fairy",
-    "83": "Automaton"
+    "83": "Automaton",
+    "84": "Fractal"
   },
   "milestoneSkinOrder": {
     "9": "Shuriken",
@@ -191,7 +192,10 @@
     "53": "5th Anniversary",
     "54": "Meteor Shower",
     "55": "Jurassic Forest",
-    "56": "Coral Reef"
+    "56": "Coral Reef",
+    "57": "Fairy Forest",
+    "58": "Steampunk",
+    "59": "Fractals"
   },
   "menuOrder": {
     "1": "Dark Being",
@@ -203,7 +207,8 @@
     "7": "Supernova",
     "8": "Claw Machine",
     "9": "Magician",
-    "10": "Coral Reef"
+    "10": "Coral Reef",
+    "11": "Fairy Forest"
   },
   "guardianSkinOrder": {
     "1": "Butter",
@@ -237,7 +242,8 @@
     "8": "Supernova",
     "9": "Claw Machine",
     "10": "Magician",
-    "11": "Coral Reef"
+    "11": "Coral Reef",
+    "12": "Fairy Forest"
   },
   "songOrder": {
     "6": "Krisu - Oceans Sings",
